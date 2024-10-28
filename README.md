@@ -36,3 +36,4 @@ Hinnad aina tõusevad ja tõusevad, kuid sööma peab ka vaene tudeng. Rakendus 
 * Liisi Loomets
 * Ester Ojala
 * Taavi Vendt
+* Jörgen Kristofer Rebane
