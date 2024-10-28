@@ -34,3 +34,4 @@ Hinnad aina tõusevad ja tõusevad, kuid sööma peab ka vaene tudeng. Rakendus 
 ## Meeskond
 
 * Liisi Loomets
+* Ester Ojala
