@@ -25,6 +25,7 @@ export default function RecipeForm() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([
     { name: "", quantity: "" },
   ]);
+  const [image, setImage] = useState<File | null>(null); 
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -65,6 +66,32 @@ export default function RecipeForm() {
     setIngredients(updatedIngredients);
   };
 
+  const uploadImage = async () => {
+    if (!image) {
+      console.error("No image selected");
+      return null;
+    }
+
+    const fileExtension = image.name.split(".").pop();
+    const filePath = `recipe-images/${Date.now()}.${fileExtension}`;
+
+    try {
+      const { data, error } = await supabase.storage
+        .from("recipe-images") 
+        .upload(filePath, image);
+
+      if (error) {
+        console.error("Error uploading image:", error.message);
+        return null;
+      }
+
+      return data?.path; 
+    } catch (err) {
+      console.error("Error uploading image:", err);
+      return null;
+    }
+  };
+
   const addRecipe = async (event: React.FormEvent) => {
     event.preventDefault();
 
@@ -85,6 +112,8 @@ export default function RecipeForm() {
       console.error("User must be logged in to submit a recipe.");
       return;
     }
+
+    const imagePath = await uploadImage();
 
     const ingredientText = ingredients
       .map((ingredient) => `${ingredient.name} ${ingredient.quantity}`)
@@ -113,8 +142,9 @@ export default function RecipeForm() {
           servings,
           categories_id: parseInt(selectedCategory),
           total_time_minutes: totalTimeMinutes,
-          ingredients_id: ingredientId,
+          ingredients_id: ingredientId, 
           steps_description: stepsDescription,
+          image_url: imagePath,
           time_of_creation: new Date().toISOString(),
           users_id: userId,
         },
@@ -134,6 +164,7 @@ export default function RecipeForm() {
     setSelectedCategory("");
     setTotalTimeMinutes(0);
     setStepsDescription("");
+    setImage(null); 
   };
 
   return (
@@ -212,6 +243,14 @@ export default function RecipeForm() {
         type="text"
         value={stepsDescription}
         onChange={(e) => setStepsDescription(e.target.value)}
+      />
+
+      <Label htmlFor="image">Retsepti pilt</Label>
+      <Input
+        id="image"
+        type="file"
+        accept="image/*"
+        onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
       />
 
       <button type="submit">Postita</button>
