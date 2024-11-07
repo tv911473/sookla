@@ -128,3 +128,20 @@ export const signOutAction = async () => {
   await supabase.auth.signOut();
   return redirect("/sign-in");
 };
+
+export const getAllRecipesAction = async () => {
+  const supabase = await createClient();
+
+  let { data: recipes, error } = await supabase
+    .from("published_recipes")
+    .select("*");
+  console.log("server read all");
+
+  if (error) {
+    console.log("Error fetching server recipes")
+    return []
+  } 
+  
+  
+  return recipes;
+};
