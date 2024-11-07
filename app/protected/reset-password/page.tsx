@@ -10,18 +10,18 @@ export default async function ResetPassword(props: {
   const searchParams = await props.searchParams;
   return (
     <form className="flex flex-col w-full max-w-md p-4 gap-2 [&>input]:mb-4">
-      <h1 className="text-2xl font-medium">Reset password</h1>
+      <h1 className="text-2xl font-medium">Parooli taastamine</h1>
       <p className="text-sm text-foreground/60">
-        Please enter your new password below.
+        Palun sisesta uus parool siia.
       </p>
-      <Label htmlFor="password">New password</Label>
+      <Label htmlFor="password">Uus parool</Label>
       <Input
         type="password"
         name="password"
         placeholder="New password"
         required
       />
-      <Label htmlFor="confirmPassword">Confirm password</Label>
+      <Label htmlFor="confirmPassword">Kinnita parool</Label>
       <Input
         type="password"
         name="confirmPassword"
@@ -29,7 +29,7 @@ export default async function ResetPassword(props: {
         required
       />
       <SubmitButton formAction={resetPasswordAction}>
-        Reset password
+        Taasta parool
       </SubmitButton>
       <FormMessage message={searchParams} />
     </form>
