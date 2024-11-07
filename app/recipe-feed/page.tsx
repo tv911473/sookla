@@ -1,37 +1,17 @@
 import { getAllRecipesAction } from "@/app/actions";
-import { Key } from "react";
+import { RecipeCard } from "@/components/recipes/RecipeCard";
 
 export default async function RecipeFeed() {
   const recipedata = await getAllRecipesAction();
-  console.log(recipedata);
+  const recipes = recipedata || [];
+
   return (
-    <>
-      <ul>
-        {recipedata &&
-          recipedata.map((recipe) => (
-            <li key={recipe.id}>
-              <h1>{recipe.title}</h1>
-              <br />
-              <span>Portsjonid: {recipe.servings}</span>
-              <br />
-              <span>Kategooria: {recipe.categories.category_name}</span>
-              <br />
-              <span>Valmistusaeg: {recipe.total_time_minutes} minutit</span>
-              <br />
-              <span>
-                Koostisosad:
-                {recipe.ingredients.ingredient_text
-                  .split(",")
-                  .map((ingredient: string) => (
-                    <ol>{ingredient.trim()}</ol>
-                  ))}
-              </span>
-              <br />
-              <span>{recipe.steps_description}</span>
-              <br />
-            </li>
-          ))}
+    <div className="px-4 py-6">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {recipes.map((recipe) => (
+          <RecipeCard key={recipe.id} recipe={recipe} />
+        ))}
       </ul>
-    </>
+    </div>
   );
 }

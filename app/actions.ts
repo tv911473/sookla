@@ -134,7 +134,7 @@ export const getAllRecipesAction = async () => {
 
   let { data: recipes, error } = await supabase
     .from("published_recipes")
-    .select(`*, categories("*"), ingredients("*")`);
+    .select(`*, categories(*), ingredients!inner(*)`);
   console.log("server read all");
 
   if (error) {
