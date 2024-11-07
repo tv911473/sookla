@@ -21,7 +21,8 @@ export default function RootLayout({
       <body className="bg-background text-foreground">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          // defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
@@ -51,7 +52,7 @@ export default function RootLayout({
                     TLU/DTI
                   </a>
                 </p>
-                <ThemeSwitcher />
+                {/* <ThemeSwitcher /> */}
               </footer>
             </div>
           </main>
