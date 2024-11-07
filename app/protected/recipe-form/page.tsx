@@ -9,15 +9,22 @@ type Category = {
   category_name: string;
 };
 
+type Ingredient = {
+  name: string;
+  quantity: string;
+};
+
 export default function RecipeForm() {
   const supabase = createClient();
   const [title, setTitle] = useState("");
-  const [ingredientName, setIngredientName] = useState("");
   const [servings, setServings] = useState(0);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [totalTimeMinutes, setTotalTimeMinutes] = useState(0);
   const [stepsDescription, setStepsDescription] = useState("");
+  const [ingredients, setIngredients] = useState<Ingredient[]>([
+    { name: "", quantity: "" },
+  ]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -40,25 +47,22 @@ export default function RecipeForm() {
     fetchCategories();
   }, []);
 
-  const addIngredient = async (ingredientName: string) => {
-    if (!ingredientName.trim()) {
-      console.error("Ingredient name cannot be empty.");
-      return null;
-    }
+  const addIngredientField = () => {
+    setIngredients([...ingredients, { name: "", quantity: "" }]);
+  };
 
-    const { data, error } = await supabase
-      .from("ingredients")
-      .insert({ ingredient_text: ingredientName })
-      .select("id")
-      .single();
+  const removeIngredientField = (index: number) => {
+    setIngredients(ingredients.filter((_, i) => i !== index));
+  };
 
-    if (error) {
-      console.error("Error adding ingredient:", error.message);
-      return null;
-    }
-
-    console.log("Ingredient added:", data);
-    return data?.id;
+  const handleIngredientChange = (
+    index: number,
+    field: "name" | "quantity",
+    value: string
+  ) => {
+    const updatedIngredients = [...ingredients];
+    updatedIngredients[index][field] = value;
+    setIngredients(updatedIngredients);
   };
 
   const addRecipe = async (event: React.FormEvent) => {
@@ -82,38 +86,54 @@ export default function RecipeForm() {
       return;
     }
 
-    const ingredientId = await addIngredient(ingredientName);
-    if (!ingredientId) {
-      console.error("Failed to add ingredient.");
+    const ingredientText = ingredients
+      .map((ingredient) => `${ingredient.name} ${ingredient.quantity}`)
+      .join(", ");
+
+    const { data, error } = await supabase
+      .from("ingredients")
+      .insert({
+        ingredient_text: ingredientText,
+      })
+      .select("id")
+      .single();
+
+    if (error) {
+      console.error("Error adding ingredient:", error.message);
       return;
     }
 
-    const { data, error } = await supabase.from("published_recipes").insert([
-      {
-        title,
-        servings,
-        categories_id: parseInt(selectedCategory),
-        total_time_minutes: totalTimeMinutes,
-        ingredients_id: ingredientId,
-        steps_description: stepsDescription,
-        time_of_creation: new Date().toISOString(),
-        users_id: userId, // Attach user ID here
-      },
-    ]);
+    const ingredientId = data?.id;
 
-    if (error) {
-      console.error("Error adding recipe:", error);
-    } else {
-      console.log("Recipe added successfully:", data);
+    const { data: recipeData, error: recipeError } = await supabase
+      .from("published_recipes")
+      .insert([
+        {
+          title,
+          servings,
+          categories_id: parseInt(selectedCategory),
+          total_time_minutes: totalTimeMinutes,
+          ingredients_id: ingredientId,
+          steps_description: stepsDescription,
+          time_of_creation: new Date().toISOString(),
+          users_id: userId,
+        },
+      ])
+      .single();
 
-      // Clear form fields
-      setTitle("");
-      setIngredientName("");
-      setServings(0);
-      setSelectedCategory("");
-      setTotalTimeMinutes(0);
-      setStepsDescription("");
+    if (recipeError) {
+      console.error("Error adding recipe:", recipeError.message);
+      return;
     }
+
+    console.log("Recipe added successfully:", recipeData);
+
+    setTitle("");
+    setIngredients([{ name: "", quantity: "" }]);
+    setServings(0);
+    setSelectedCategory("");
+    setTotalTimeMinutes(0);
+    setStepsDescription("");
   };
 
   return (
@@ -126,13 +146,35 @@ export default function RecipeForm() {
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <Label htmlFor="ingredientName">Koostisosa</Label>
-      <Input
-        id="ingredientName"
-        type="text"
-        value={ingredientName}
-        onChange={(e) => setIngredientName(e.target.value)}
-      />
+      <div>
+        <Label>Koostisosad</Label>
+        {ingredients.map((ingredient, index) => (
+          <div key={index}>
+            <Input
+              type="text"
+              placeholder="Koostisosa nimi"
+              value={ingredient.name}
+              onChange={(e) =>
+                handleIngredientChange(index, "name", e.target.value)
+              }
+            />
+            <Input
+              type="text"
+              placeholder="Kogus"
+              value={ingredient.quantity}
+              onChange={(e) =>
+                handleIngredientChange(index, "quantity", e.target.value)
+              }
+            />
+            <button type="button" onClick={() => removeIngredientField(index)}>
+              Eemalda
+            </button>
+          </div>
+        ))}
+        <button type="button" onClick={addIngredientField}>
+          Lisa koostisosa
+        </button>
+      </div>
 
       <Label htmlFor="servings">Portsjonite arv</Label>
       <Input
