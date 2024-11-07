@@ -4,7 +4,7 @@ export default function DeployButton() {
   return (
     <>
       <Button className="flex items-center gap-2" size={"sm"}>
-        <span>Nupp</span>
+        <span>Lisa retsept</span>
       </Button>
     </>
   );

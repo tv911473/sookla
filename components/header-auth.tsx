@@ -3,6 +3,10 @@ import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/server";
+import RecipesButton from "./recipes-button";
+import AddRecipesButton from "./add-recipe-button";
+import AccountButton from "./account-button";
+import AboutUsButton from "./about-us-button";
 
 export default async function AuthButton() {
   const supabase = await createClient();
@@ -40,14 +44,21 @@ export default async function AuthButton() {
     );
   }
   return user ? (
-    <div className="flex items-center gap-4">
-      Hey, {user.email}!
-      <form action={signOutAction}>
-        <Button type="submit" variant={"outline"}>
-          Logi välja
-        </Button>
-      </form>
-    </div>
+    <>
+      <div className="flex items-center gap-2">
+        <RecipesButton />
+        <AddRecipesButton />
+        <AccountButton />
+        <AboutUsButton />
+      </div>
+      <div className="flex items-center gap-4">
+        <form action={signOutAction}>
+          <Button type="submit" variant={"outline"}>
+            Logi välja
+          </Button>
+        </form>
+      </div>
+    </>
   ) : (
     <div className="flex gap-2">
       <Button asChild size="sm" variant={"outline"}>
