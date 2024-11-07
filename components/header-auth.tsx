@@ -46,7 +46,7 @@ export default async function AuthButton() {
           <Link href="/add-recipe">Lisa retsept</Link>
         </Button>
         <Button size="sm" variant={"default"}>
-          <Link href="/recipes">Retseptid</Link>
+          <Link href="/recipe-feed">Retseptid</Link>
         </Button>
         <Button size="sm" variant={"default"}>
           <Link href="/account">Konto</Link>
