@@ -134,14 +134,13 @@ export const getAllRecipesAction = async () => {
 
   let { data: recipes, error } = await supabase
     .from("published_recipes")
-    .select("*");
+    .select(`*, categories("*"), ingredients("*")`);
   console.log("server read all");
 
   if (error) {
-    console.log("Error fetching server recipes")
-    return []
-  } 
-  
-  
+    console.log("Error fetching server recipes");
+    return [];
+  }
+
   return recipes;
 };
