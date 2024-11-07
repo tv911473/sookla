@@ -3,10 +3,6 @@ import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/server";
-import RecipesButton from "./recipes-button";
-import AddRecipesButton from "./add-recipe-button";
-import AccountButton from "./account-button";
-import AboutUsButton from "./about-us-button";
 
 export default async function AuthButton() {
   const supabase = await createClient();
@@ -27,7 +23,7 @@ export default async function AuthButton() {
               disabled
               className="opacity-75 cursor-none pointer-events-none"
             >
-              <Link href="/sign-in">Sign in</Link>
+              <Link href="/sign-in">Logi sisse</Link>
             </Button>
             <Button
               asChild
@@ -36,7 +32,7 @@ export default async function AuthButton() {
               disabled
               className="opacity-75 cursor-none pointer-events-none"
             >
-              <Link href="/sign-up">Sign up</Link>
+              <Link href="/sign-up">Liitu</Link>
             </Button>
           </div>
         </div>
@@ -46,14 +42,22 @@ export default async function AuthButton() {
   return user ? (
     <>
       <div className="flex items-center gap-2">
-        <RecipesButton />
-        <AddRecipesButton />
-        <AccountButton />
-        <AboutUsButton />
+        <Button size="sm" variant={"default"}>
+          <Link href="/add-recipe">Lisa retsept</Link>
+        </Button>
+        <Button size="sm" variant={"default"}>
+          <Link href="/recipes">Retseptid</Link>
+        </Button>
+        <Button size="sm" variant={"default"}>
+          <Link href="/account">Konto</Link>
+        </Button>
+        <Button size="sm" variant={"outline"}>
+          <Link href="/about-us">Meist</Link>
+        </Button>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         <form action={signOutAction}>
-          <Button type="submit" variant={"outline"}>
+          <Button type="submit" size="sm" variant={"default"}>
             Logi välja
           </Button>
         </form>
@@ -61,7 +65,7 @@ export default async function AuthButton() {
     </>
   ) : (
     <div className="flex gap-2">
-      <Button asChild size="sm" variant={"outline"}>
+      <Button asChild size="sm" variant={"default"}>
         <Link href="/sign-in">Logi sisse</Link>
       </Button>
       <Button asChild size="sm" variant={"default"}>
