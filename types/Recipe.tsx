@@ -12,4 +12,5 @@ export type Recipe = {
   steps_description: string;
   time_of_creation: Date;
   users_id: UUID;
+  users: { username: string };
 };
