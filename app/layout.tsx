@@ -52,6 +52,9 @@ export default function RootLayout({
                     TLU/DTI
                   </a>
                 </p>
+                <Link href="/about-us" className="text-base hover:underline">
+                  Meist
+                </Link>
                 {/* <ThemeSwitcher /> */}
               </footer>
             </div>

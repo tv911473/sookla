@@ -51,9 +51,6 @@ export default async function AuthButton() {
         <Button size="sm" variant={"default"}>
           <Link href="/account">Konto</Link>
         </Button>
-        <Button size="sm" variant={"default"}>
-          <Link href="/about-us">Meist</Link>
-        </Button>
       </div>
       <div className="flex items-center gap-2">
         <form action={signOutAction}>
