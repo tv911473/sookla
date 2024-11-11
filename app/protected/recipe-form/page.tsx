@@ -117,8 +117,8 @@ export default function RecipeForm() {
   const addRecipe = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!title || !selectedCategory) {
-      console.error("Title and category are required.");
+    if (!title) {
+      console.error("Title is required.");
       return;
     }
 
