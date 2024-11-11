@@ -1,8 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
+import { Cropper, ReactCropperElement } from "react-cropper";
+import "cropperjs/dist/cropper.css";
 
 type Category = {
   id: number;
@@ -26,6 +28,8 @@ export default function RecipeForm() {
     { name: "", quantity: "" },
   ]);
   const [image, setImage] = useState<File | null>(null); 
+  const [croppedImage, setCroppedImage] = useState<string | null>(null); 
+  const cropperRef = useRef<ReactCropperElement>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -66,26 +70,41 @@ export default function RecipeForm() {
     setIngredients(updatedIngredients);
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      setImage(file);
+    }
+  };
+
+  const cropImage = () => {
+    const cropper = cropperRef.current?.cropper;
+    if (cropper) {
+      setCroppedImage(cropper.getCroppedCanvas().toDataURL());
+    }
+  };
+
   const uploadImage = async () => {
-    if (!image) {
-      console.error("No image selected");
+    if (!croppedImage) {
+      console.error("No cropped image available");
       return null;
     }
 
-    const fileExtension = image.name.split(".").pop();
+    const blob = await (await fetch(croppedImage)).blob();
+    const fileExtension = image?.name.split(".").pop();
     const filePath = `recipe-images/${Date.now()}.${fileExtension}`;
 
     try {
       const { data, error } = await supabase.storage
-        .from("recipe-images") 
-        .upload(filePath, image);
+        .from("recipe-images")
+        .upload(filePath, blob);
 
       if (error) {
         console.error("Error uploading image:", error.message);
         return null;
       }
 
-      return data?.path; 
+      return data?.path;
     } catch (err) {
       console.error("Error uploading image:", err);
       return null;
@@ -142,7 +161,7 @@ export default function RecipeForm() {
           servings,
           categories_id: parseInt(selectedCategory),
           total_time_minutes: totalTimeMinutes,
-          ingredients_id: ingredientId, 
+          ingredients_id: ingredientId,
           steps_description: stepsDescription,
           image_url: imagePath,
           time_of_creation: new Date().toISOString(),
@@ -164,7 +183,8 @@ export default function RecipeForm() {
     setSelectedCategory("");
     setTotalTimeMinutes(0);
     setStepsDescription("");
-    setImage(null); 
+    setImage(null);
+    setCroppedImage(null);
   };
 
   return (
@@ -228,7 +248,7 @@ export default function RecipeForm() {
           </option>
         ))}
       </select>
-        <br></br>
+      <br></br>
       <Label htmlFor="totalTimeMinutes">Valmistusaeg (minutites)</Label>
       <Input
         id="totalTimeMinutes"
@@ -250,8 +270,25 @@ export default function RecipeForm() {
         id="image"
         type="file"
         accept="image/*"
-        onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
+        onChange={handleImageChange}
       />
+
+      {image && (
+        <div>
+          <Cropper
+            src={URL.createObjectURL(image)}
+            style={{ height: 500, width: "100%" }}
+            initialAspectRatio={1}
+            aspectRatio={1}
+            guides={false}
+            ref={cropperRef}
+            viewMode={1}
+          />
+          <button type="button" onClick={cropImage}>
+            Salvesta kärbitud pilt
+          </button>
+        </div>
+      )}
 
       <button type="submit">Postita</button>
     </form>
