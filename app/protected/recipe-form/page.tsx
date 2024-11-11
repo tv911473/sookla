@@ -28,7 +28,6 @@ export default function RecipeForm() {
     { name: "", quantity: "" },
   ]);
   const [image, setImage] = useState<File | null>(null); 
-  const [croppedImage, setCroppedImage] = useState<string | null>(null); 
   const cropperRef = useRef<ReactCropperElement>(null);
 
   useEffect(() => {
@@ -77,20 +76,24 @@ export default function RecipeForm() {
     }
   };
 
-  const cropImage = () => {
-    const cropper = cropperRef.current?.cropper;
-    if (cropper) {
-      setCroppedImage(cropper.getCroppedCanvas().toDataURL());
-    }
+  const getCroppedImageURL = (): Promise<string | null> => {
+    return new Promise((resolve) => {
+      const cropper = cropperRef.current?.cropper;
+      if (cropper) {
+        resolve(cropper.getCroppedCanvas().toDataURL());
+      } else {
+        resolve(null);
+      }
+    });
   };
 
-  const uploadImage = async () => {
-    if (!croppedImage) {
+  const uploadImage = async (croppedImageURL: string | null) => {
+    if (!croppedImageURL) {
       console.error("No cropped image available");
       return null;
     }
 
-    const blob = await (await fetch(croppedImage)).blob();
+    const blob = await (await fetch(croppedImageURL)).blob();
     const fileExtension = image?.name.split(".").pop();
     const filePath = `recipe-images/${Date.now()}.${fileExtension}`;
 
@@ -119,6 +122,11 @@ export default function RecipeForm() {
       return;
     }
 
+    const croppedImageURL = await getCroppedImageURL();
+    const imagePath = croppedImageURL
+      ? await uploadImage(croppedImageURL)
+      : null;
+
     const { data: sessionData, error: sessionError } =
       await supabase.auth.getSession();
     if (sessionError) {
@@ -131,8 +139,6 @@ export default function RecipeForm() {
       console.error("User must be logged in to submit a recipe.");
       return;
     }
-
-    const imagePath = await uploadImage();
 
     const ingredientText = ingredients
       .map((ingredient) => `${ingredient.name} ${ingredient.quantity}`)
@@ -184,7 +190,6 @@ export default function RecipeForm() {
     setTotalTimeMinutes(0);
     setStepsDescription("");
     setImage(null);
-    setCroppedImage(null);
   };
 
   return (
@@ -277,16 +282,22 @@ export default function RecipeForm() {
         <div>
           <Cropper
             src={URL.createObjectURL(image)}
-            style={{ height: 500, width: "100%" }}
+            style={{
+              height: "auto",
+              width: "100%",
+              maxWidth: "400px",
+              maxHeight: "400px",
+              borderRadius: "8px",
+              marginBottom: "15px",
+            }}
             initialAspectRatio={1}
             aspectRatio={1}
             guides={false}
             ref={cropperRef}
             viewMode={1}
+            minContainerWidth={400}
+            minContainerHeight={400}
           />
-          <button type="button" onClick={cropImage}>
-            Salvesta kärbitud pilt
-          </button>
         </div>
       )}
 
