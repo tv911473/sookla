@@ -3,6 +3,7 @@ import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/server";
+import { LikeButton } from "./ui/like-button";
 
 export default async function AuthButton() {
   const supabase = await createClient();
@@ -51,6 +52,7 @@ export default async function AuthButton() {
         <Button size="sm" variant={"default"}>
           <Link href="/protected/user-account">Konto</Link>
         </Button>
+        <LikeButton />
       </div>
       <div className="flex items-center gap-2">
         <form action={signOutAction}>
