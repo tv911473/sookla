@@ -17,34 +17,27 @@ export const signUpAction = async (formData: FormData) => {
     return { error: "Email, parool, ja kasutajanimi on vajalikud" };
   }
 
-  // Sign up the user in auth
-  const { data: authData, error: authError } = await supabase.auth.signUp({
+  // Signup koos usernamega
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      data: {
+        username,
+      },
       emailRedirectTo: `${origin}/auth/callback`,
     },
   });
 
-  if (authError) {
-    console.error(authError.code + " " + authError.message);
-    return encodedRedirect("error", "/sign-up", authError.message);
+  if (error) {
+    console.error(error.message);
+    return encodedRedirect("error", "/sign-up", error.message);
   }
 
-  // After successful sign-up, insert username into public.users
-  if (authData.user) {
-    const { error: profileError } = await supabase
-      .from("users")
-      .insert([{ id: authData.user.id, username }]);
-
-    if (profileError) {
-      console.error(profileError.message);
-      return encodedRedirect(
-        "error",
-        "/sign-up",
-        "Kasutajanime salvestamine nurjus"
-      );
-    }
+  if (data?.user) {
+    const usernameFromMetadata = data.user.user_metadata?.username; // Accessing username from user_metadata
+    console.log("User metadata:", data.user.user_metadata); // Confirm kas on olemas usermetadata
+    console.log("Username from metadata:", usernameFromMetadata); // Logib username
   }
 
   return encodedRedirect(
