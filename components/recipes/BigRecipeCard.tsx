@@ -1,6 +1,6 @@
 import { Recipe } from "@/types/Recipe";
 
-export function RecipeCard({ recipe }: { recipe: Recipe }) {
+export function BigRecipeCard({ recipe }: { recipe: Recipe }) {
   const placeholderImage = "https://via.placeholder.com/150"; 
   
   return (
@@ -14,19 +14,19 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
       <br />
       <span className="block text-sm text-gray-700">Portsjonid: {recipe.servings}</span>
       <br />
-      <span className="block text-sm text-gray-700">Kategooria: {recipe.categories.category_name}</span>
+      {/* <span className="block text-sm text-gray-700">Kategooria: {recipe.categories.category_name}</span> */}
       <br />
       <span className="block text-sm text-gray-700">Valmistusaeg: {recipe.total_time_minutes} minutit</span>
       <br />
       <span className="block text-sm text-gray-700">
         Koostisosad:
-        <ol className="list-decimal pl-5">
+        {/* <ol className="list-decimal pl-5">
           {recipe.ingredients.ingredient_text
             .split(",")
             .map((ingredient: string) => (
               <li className="text-sm text-gray-600">{ingredient.trim()}</li>
             ))}
-        </ol>
+        </ol> */}
       </span>
       <br />
       <span className="block text-sm text-gray-700">Valmistusjuhend: </span>
