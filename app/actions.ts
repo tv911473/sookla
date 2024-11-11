@@ -4,6 +4,7 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Recipe } from "@/types/Recipe";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -31,6 +32,7 @@ export const signUpAction = async (formData: FormData) => {
       "success",
       "/sign-up",
       "Tänud liitumast! Palun kontrolli oma emaili kinnituse jaoks."
+
     );
   }
 };
@@ -72,6 +74,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
       "error",
       "/forgot-password",
       "Parooli taastamine nurjus"
+
     );
   }
 
@@ -109,6 +112,7 @@ export const resetPasswordAction = async (formData: FormData) => {
       "error",
       "/protected/reset-password",
       "Parooli uuendamine nurjus"
+
     );
   }
 
@@ -119,4 +123,20 @@ export const signOutAction = async () => {
   const supabase = await createClient();
   await supabase.auth.signOut();
   return redirect("/sign-in");
+};
+
+export const getAllRecipesAction = async () => {
+  const supabase = await createClient();
+
+  let { data: recipes, error } = await supabase
+    .from("published_recipes")
+    .select(`*, categories(*), ingredients!inner(*)`);
+  console.log("server read all");
+
+  if (error) {
+    console.log("Error fetching server recipes");
+    return [];
+  }
+
+  return recipes;
 };
