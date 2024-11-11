@@ -131,7 +131,7 @@ export const getAllRecipesAction = async () => {
   console.log("server read all");
 
   if (error) {
-    console.log("Error fetching server recipes");
+    console.log("Error serveri retseptide kätte saamisel");
     return [];
   }
 
@@ -143,14 +143,14 @@ export const getSingleRecipe = async (id: number) => {
   let { data: recipe, error } = await supabase
     .from("published_recipes")
     .select(`*, categories(*), ingredients!inner(*)`)
-    .eq("id", id)
+    .eq("id", id).single()
 
     console.log(recipe);
 
   if (error) {
-    console.log("Error fetching server recipes");
+    console.log("Error ühe serveri retsepti kättesaamisel");
     return [];
   }
 
-  return recipe[0];
+  return recipe;
 };

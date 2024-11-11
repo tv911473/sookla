@@ -1,8 +1,6 @@
-import { getAllRecipesAction, getSingleRecipe } from "@/app/actions";
+import { getSingleRecipe } from "@/app/actions";
 import { BigRecipeCard } from "@/components/recipes/BigRecipeCard";
-import { Recipe } from "@/types/Recipe";
-import { createClient } from "@/utils/supabase/client";
-import { useEffect, useState } from "react";
+
 
 type SingleRecipeProps = {
     params: {
@@ -27,5 +25,3 @@ export default async function SingleRecipe({ params }: SingleRecipeProps) {
       </div>
     );
 }
-
-//    <p>Post: {router.query.slug}</p>)
