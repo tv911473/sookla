@@ -9,14 +9,16 @@ import { Recipe } from "@/types/Recipe";
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
+  const username = formData.get("username")?.toString();
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
 
-  if (!email || !password) {
-    return { error: "Email ja parool vajalikud" };
+  if (!email || !password || !username) {
+    return { error: "Email, parool, ja kasutajanimi on vajalikud" };
   }
 
-  const { error } = await supabase.auth.signUp({
+  // Sign up the user in auth
+  const { data: authData, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -24,17 +26,32 @@ export const signUpAction = async (formData: FormData) => {
     },
   });
 
-  if (error) {
-    console.error(error.code + " " + error.message);
-    return encodedRedirect("error", "/sign-up", error.message);
-  } else {
-    return encodedRedirect(
-      "success",
-      "/sign-up",
-      "Tänud liitumast! Palun kontrolli oma emaili kinnituse jaoks."
-
-    );
+  if (authError) {
+    console.error(authError.code + " " + authError.message);
+    return encodedRedirect("error", "/sign-up", authError.message);
   }
+
+  // After successful sign-up, insert username into public.users
+  if (authData.user) {
+    const { error: profileError } = await supabase
+      .from("users")
+      .insert([{ id: authData.user.id, username }]);
+
+    if (profileError) {
+      console.error(profileError.message);
+      return encodedRedirect(
+        "error",
+        "/sign-up",
+        "Kasutajanime salvestamine nurjus"
+      );
+    }
+  }
+
+  return encodedRedirect(
+    "success",
+    "/sign-up",
+    "Tänud liitumast! Palun kontrolli oma emaili kinnituse jaoks."
+  );
 };
 
 export const signInAction = async (formData: FormData) => {
@@ -74,7 +91,6 @@ export const forgotPasswordAction = async (formData: FormData) => {
       "error",
       "/forgot-password",
       "Parooli taastamine nurjus"
-
     );
   }
 
@@ -112,7 +128,6 @@ export const resetPasswordAction = async (formData: FormData) => {
       "error",
       "/protected/reset-password",
       "Parooli uuendamine nurjus"
-
     );
   }
 
