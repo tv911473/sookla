@@ -4,7 +4,6 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Recipe } from "@/types/Recipe";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -32,12 +31,6 @@ export const signUpAction = async (formData: FormData) => {
   if (error) {
     console.error(error.message);
     return encodedRedirect("error", "/sign-up", error.message);
-  }
-
-  if (data?.user) {
-    const usernameFromMetadata = data.user.user_metadata?.username; // Accessing username from user_metadata
-    console.log("User metadata:", data.user.user_metadata); // Confirm kas on olemas usermetadata
-    console.log("Username from metadata:", usernameFromMetadata); // Logib username
   }
 
   return encodedRedirect(
@@ -138,13 +131,30 @@ export const getAllRecipesAction = async () => {
 
   let { data: recipes, error } = await supabase
     .from("published_recipes")
-    .select(`*, categories(*), ingredients!inner(*)`);
+    .select(`*, categories(*), ingredients!inner(*)`).order('time_of_creation', { ascending: false });
   console.log("server read all");
 
   if (error) {
-    console.log("Error fetching server recipes");
+    console.log("Error serveri retseptide kätte saamisel");
     return [];
   }
 
   return recipes;
+};
+
+export const getSingleRecipe = async (id: number) => {
+  const supabase = await createClient();
+  let { data: recipe, error } = await supabase
+    .from("published_recipes")
+    .select(`*, categories(*), ingredients!inner(*)`)
+    .eq("id", id).single()
+
+    console.log(recipe);
+
+  if (error) {
+    console.log("Error ühe serveri retsepti kättesaamisel");
+    return [];
+  }
+
+  return recipe;
 };

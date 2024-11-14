@@ -13,4 +13,5 @@ export type Recipe = {
   time_of_creation: Date;
   users_id: UUID;
   users: { username: string };
+  image_url: string;
 };
