@@ -32,7 +32,6 @@ export const signUpAction = async (formData: FormData) => {
       "success",
       "/sign-up",
       "Tänud liitumast! Palun kontrolli oma emaili kinnituse jaoks."
-
     );
   }
 };
@@ -74,7 +73,6 @@ export const forgotPasswordAction = async (formData: FormData) => {
       "error",
       "/forgot-password",
       "Parooli taastamine nurjus"
-
     );
   }
 
@@ -112,7 +110,6 @@ export const resetPasswordAction = async (formData: FormData) => {
       "error",
       "/protected/reset-password",
       "Parooli uuendamine nurjus"
-
     );
   }
 
@@ -125,7 +122,7 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
-export const getAllRecipesAction = async () => {
+export const getAllRecipesAction = async (userId: string) => {
   const supabase = await createClient();
 
   let { data: recipes, error } = await supabase
