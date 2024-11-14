@@ -4,6 +4,7 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Recipe } from "@/types/Recipe";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -126,12 +127,14 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
-export const getAllRecipesAction = async () => {
+export const getAllRecipesAction = async (): Promise<Recipe[]> => {
   const supabase = await createClient();
 
   let { data: recipes, error } = await supabase
     .from("published_recipes")
-    .select(`*, categories(*), ingredients!inner(*)`).order('time_of_creation', { ascending: false });
+
+    .select(`*, categories(*), ingredients!inner(*)`)
+    .order("time_of_creation", { ascending: false });
   console.log("server read all");
 
   if (error) {
@@ -139,7 +142,7 @@ export const getAllRecipesAction = async () => {
     return [];
   }
 
-  return recipes;
+  return recipes ?? [];
 };
 
 export const getSingleRecipe = async (id: number) => {
@@ -147,9 +150,10 @@ export const getSingleRecipe = async (id: number) => {
   let { data: recipe, error } = await supabase
     .from("published_recipes")
     .select(`*, categories(*), ingredients!inner(*)`)
-    .eq("id", id).single()
+    .eq("id", id)
+    .single();
 
-    console.log(recipe);
+  console.log(recipe);
 
   if (error) {
     console.log("Error ühe serveri retsepti kättesaamisel");
@@ -157,4 +161,22 @@ export const getSingleRecipe = async (id: number) => {
   }
 
   return recipe;
+};
+
+export const getUserRecipesAction = async (
+  userId: string
+): Promise<Recipe[]> => {
+  const supabase = await createClient();
+
+  let { data: recipes, error } = await supabase
+    .from("published_recipes")
+    .select(`*, categories(*), ingredients!inner(*)`)
+    .eq("users_id", userId);
+
+  if (error) {
+    console.log("Error kasutaja retseptide kätte saamisel");
+    return [];
+  }
+
+  return recipes ?? [];
 };
