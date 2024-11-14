@@ -3,12 +3,6 @@ import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { createClient } from "@/utils/supabase/server";
-import { LikeButton } from "./ui/like-button";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuShortcut } from "./ui/dropdown-menu";
-import { CheckBox } from "@mui/icons-material";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 
 export default async function AuthButton() {
   const supabase = await createClient();
