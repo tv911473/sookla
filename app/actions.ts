@@ -122,20 +122,19 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
-export const getAllRecipesAction = async () => {
+export const getAllRecipesAction = async (): Promise<Recipe[]> => {
   const supabase = await createClient();
 
   let { data: recipes, error } = await supabase
     .from("published_recipes")
     .select(`*, categories(*), ingredients!inner(*)`);
-  console.log("server read all");
 
   if (error) {
     console.log("Error serveri retseptide kätte saamisel");
     return [];
   }
 
-  return recipes;
+  return recipes ?? []; // Ensure we return an array, even if data is null
 };
 
 export const getSingleRecipe = async (id: number) => {
@@ -154,4 +153,22 @@ export const getSingleRecipe = async (id: number) => {
   }
 
   return recipe;
+};
+
+export const getUserRecipesAction = async (
+  userId: string
+): Promise<Recipe[]> => {
+  const supabase = await createClient();
+
+  let { data: recipes, error } = await supabase
+    .from("published_recipes")
+    .select(`*, categories(*), ingredients!inner(*)`)
+    .eq("users_id", userId);
+
+  if (error) {
+    console.log("Error kasutaja retseptide kätte saamisel");
+    return [];
+  }
+
+  return recipes ?? []; // Ensure we return an array, even if data is null
 };
