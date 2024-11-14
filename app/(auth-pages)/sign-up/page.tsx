@@ -31,6 +31,10 @@ export default async function Signup(props: {
         <div className="flex flex-col gap-2 [&>input]:mb-3 mt-8">
           <Label htmlFor="email">Email</Label>
           <Input name="email" placeholder="Sinu email" required />
+
+          <Label htmlFor="username">Kasutajanimi</Label>
+          <Input name="username" placeholder="Sinu kasutajanimi" required />
+
           <Label htmlFor="password">Parool</Label>
           <Input
             type="password"

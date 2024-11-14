@@ -1,4 +1,6 @@
 import { createClient } from "@/utils/supabase/server";
+import ChangePasswordButton from "@/components/change-password-button";
+import ChangeUsernameButton from "@/components/change-username-button";
 
 export default async function UserAccountPage() {
   const supabase = await createClient();
@@ -12,13 +14,30 @@ export default async function UserAccountPage() {
   }
 
   const formattedDate = new Date(user.created_at).toLocaleDateString("en-GB");
+  const initialUsername =
+    user.user_metadata?.username || "Kasutajanimi pole määratud";
 
   return (
-    <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
-      <h1 className="text-2xl font-bold">Konto</h1>
-      <div className="space-y-2">
+    <div className="flex flex-col items-center p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-6">
+      {/* profiilipilt kui tahame lisada siis on koht olemas */}
+      <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
+        <img
+          src="path/to/profile-picture"
+          alt="Konto Profiilipilt"
+          className="w-full h-full object-cover rounded-full"
+        />
+      </div>
+
+      {/* Muuda kasutajanime */}
+      <ChangeUsernameButton
+        email={user.email as string}
+        initialUsername={initialUsername}
+      />
+
+      {/* Konto info */}
+      <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
         <div>
-          <p className="text-sm text-gray-500">Email:</p>
+          <p className="text-sm text-gray-500">E-mail:</p>
           <p className="text-lg font-medium">{user.email}</p>
         </div>
         <div>
@@ -29,6 +48,16 @@ export default async function UserAccountPage() {
           <p className="text-sm text-gray-500">Kasutaja alates:</p>
           <p className="text-lg font-medium">{formattedDate}</p>
         </div>
+
+        {/* muuda parooli nupp */}
+        <ChangePasswordButton email={user.email as string} />
+      </div>
+
+      {/* retseptide osa kui tahame lisada, tegin lihtsalt figma järgi */}
+      <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
+        <p className="text-lg font-medium">
+          Loodud retseptid ja nende statistika
+        </p>
       </div>
     </div>
   );

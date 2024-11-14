@@ -1,7 +1,8 @@
 import { Recipe } from "@/types/Recipe";
+import { getImageUrl } from "@/utils/supabase/utils";
 
 export function BigRecipeCard({ recipe }: { recipe: Recipe }) {
-  const placeholderImage = "https://via.placeholder.com/600";
+  const imageUrl = getImageUrl(recipe.image_url);
 
   return (
     <div
@@ -32,7 +33,7 @@ export function BigRecipeCard({ recipe }: { recipe: Recipe }) {
         </div>
         <div>
           <img
-            src={placeholderImage}
+            src={imageUrl}
             alt={recipe.title}
             className="w-80 h-80 object-cover rounded-lg"
           />

@@ -4,36 +4,40 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Recipe } from "@/types/Recipe";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const password = formData.get("password")?.toString();
+  const username = formData.get("username")?.toString();
   const supabase = await createClient();
   const origin = (await headers()).get("origin");
 
-  if (!email || !password) {
-    return { error: "Email ja parool vajalikud" };
+  if (!email || !password || !username) {
+    return { error: "Email, parool, ja kasutajanimi on vajalikud" };
   }
 
-  const { error } = await supabase.auth.signUp({
+  // Signup koos usernamega
+  const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
+      data: {
+        username,
+      },
       emailRedirectTo: `${origin}/auth/callback`,
     },
   });
 
   if (error) {
-    console.error(error.code + " " + error.message);
+    console.error(error.message);
     return encodedRedirect("error", "/sign-up", error.message);
-  } else {
-    return encodedRedirect(
-      "success",
-      "/sign-up",
-      "Tänud liitumast! Palun kontrolli oma emaili kinnituse jaoks."
-    );
   }
+
+  return encodedRedirect(
+    "success",
+    "/sign-up",
+    "Tänud liitumast! Palun kontrolli oma emaili kinnituse jaoks."
+  );
 };
 
 export const signInAction = async (formData: FormData) => {
@@ -127,14 +131,17 @@ export const getAllRecipesAction = async (): Promise<Recipe[]> => {
 
   let { data: recipes, error } = await supabase
     .from("published_recipes")
-    .select(`*, categories(*), ingredients!inner(*)`);
+
+    .select(`*, categories(*), ingredients!inner(*)`).order('time_of_creation', { ascending: false });
+  console.log("server read all");
+
 
   if (error) {
     console.log("Error serveri retseptide kätte saamisel");
     return [];
   }
 
-  return recipes ?? []; // Ensure we return an array, even if data is null
+  return recipes ?? [];
 };
 
 export const getSingleRecipe = async (id: number) => {
@@ -170,5 +177,5 @@ export const getUserRecipesAction = async (
     return [];
   }
 
-  return recipes ?? []; // Ensure we return an array, even if data is null
+  return recipes ?? [];
 };
