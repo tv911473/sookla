@@ -122,7 +122,7 @@ export const signOutAction = async () => {
   return redirect("/sign-in");
 };
 
-export const getAllRecipesAction = async (userId: string) => {
+export const getAllRecipesAction = async () => {
   const supabase = await createClient();
 
   let { data: recipes, error } = await supabase
@@ -143,9 +143,10 @@ export const getSingleRecipe = async (id: number) => {
   let { data: recipe, error } = await supabase
     .from("published_recipes")
     .select(`*, categories(*), ingredients!inner(*)`)
-    .eq("id", id).single()
+    .eq("id", id)
+    .single();
 
-    console.log(recipe);
+  console.log(recipe);
 
   if (error) {
     console.log("Error ühe serveri retsepti kättesaamisel");

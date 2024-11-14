@@ -43,7 +43,7 @@ export default async function AuthButton() {
     <>
       <div className="flex items-center gap-2">
         <Button size="sm" variant={"default"}>
-          <Link href="/protected/add-recipe">Lisa retsept</Link>
+          <Link href="/protected/recipe-form">Lisa retsept</Link>
         </Button>
         <Button size="sm" variant={"default"}>
           <Link href="/protected/user-recipes">Minu retseptid</Link>

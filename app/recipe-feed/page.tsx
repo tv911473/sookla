@@ -2,12 +2,8 @@ import { getAllRecipesAction } from "@/app/actions";
 import { RecipeCard } from "@/components/recipes/RecipeCard";
 import { Recipe } from "@/types/Recipe";
 
-interface RecipeFeedProps {
-  userId: string;
-}
-
-export default async function RecipeFeed({ userId }: RecipeFeedProps) {
-  const recipedata = await getAllRecipesAction(userId); // Pass userId to the action
+export default async function RecipeFeed() {
+  const recipedata = await getAllRecipesAction();
   const recipes = recipedata || [];
 
   return (
