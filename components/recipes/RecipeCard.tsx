@@ -8,13 +8,13 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
     <Link
       key={recipe.id}
       href={`/recipes/${recipe.id}`}
-      className="flex flex-col justify-between p-4 mb-4 bg-red-100 border shadow-md cursor-pointer hover:shadow-lg transition-shadow"
+      className="flex flex-col justify-between p-4 mb-4 bg-red-100 border rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow"
     >
       <div className="flex flex-col">
         <img
           src={placeholderImage}
           alt={recipe.title}
-          className="w-full h-40 object-cover mb-4 rounded-lg"
+          className="auto-height-img mb-8 rounded-lg"
         />
         <h1 className="text-xl font-semibold">{recipe.title}</h1>
         <br />
