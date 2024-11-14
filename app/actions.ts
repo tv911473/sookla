@@ -131,9 +131,26 @@ export const getAllRecipesAction = async (userId: string) => {
   console.log("server read all");
 
   if (error) {
-    console.log("Error fetching server recipes");
+    console.log("Error serveri retseptide kätte saamisel");
     return [];
   }
 
   return recipes;
+};
+
+export const getSingleRecipe = async (id: number) => {
+  const supabase = await createClient();
+  let { data: recipe, error } = await supabase
+    .from("published_recipes")
+    .select(`*, categories(*), ingredients!inner(*)`)
+    .eq("id", id).single()
+
+    console.log(recipe);
+
+  if (error) {
+    console.log("Error ühe serveri retsepti kättesaamisel");
+    return [];
+  }
+
+  return recipe;
 };
