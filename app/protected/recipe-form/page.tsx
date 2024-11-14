@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
 import { Cropper, ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
+import { Alert } from "flowbite-react";
 
 type Category = {
   id: number;
@@ -29,6 +30,29 @@ export default function RecipeForm() {
   ]);
   const [image, setImage] = useState<File | null>(null);
   const cropperRef = useRef<ReactCropperElement>(null);
+  const [errors, setErrors] = useState<string[]>([]);
+
+  const validateForm = () => {
+    const missingFields = [];
+    if (!title) missingFields.push("Pealkiri");
+    if (
+      ingredients.some((ingredient) => !ingredient.name || !ingredient.quantity)
+    ) {
+      missingFields.push("Koostisosa ja kogus");
+    }
+    if (!servings) missingFields.push("Portsjonite arv");
+    if (!selectedCategory) missingFields.push("Kategooria");
+    if (!totalTimeMinutes) missingFields.push("Valmistusaeg");
+    if (!stepsDescription) missingFields.push("Valmstusjuhend");
+
+    if (missingFields.length > 0) {
+      setErrors(missingFields);
+      return false;
+    }
+
+    setErrors([]);
+    return true;
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -117,7 +141,18 @@ export default function RecipeForm() {
   const addRecipe = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!title || !ingredients || !servings || !categories || !totalTimeMinutes || !stepsDescription) {
+    if (!validateForm()) {
+      return;
+    }
+
+    if (
+      !title ||
+      !ingredients ||
+      !servings ||
+      !categories ||
+      !totalTimeMinutes ||
+      !stepsDescription
+    ) {
       console.error("All fields, except image field, are required.");
       return;
     }
@@ -194,6 +229,17 @@ export default function RecipeForm() {
 
   return (
     <form onSubmit={addRecipe}>
+      {errors.length > 0 && (
+        <Alert color="red" onDismiss={() => setErrors([])}>
+          <span className="font-medium">Palun täida järgmised väljad:</span>
+          <ul className="mt-2 ml-4 list-disc list-inside">
+            {errors.map((error, index) => (
+              <li key={index}>{error}</li>
+            ))}
+          </ul>
+        </Alert>
+      )}
+
       <Label htmlFor="title">Pealkiri</Label>
       <Input
         id="title"
