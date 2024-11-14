@@ -1,6 +1,6 @@
-// pages/protected/user-account.tsx
 import { createClient } from "@/utils/supabase/server";
 import ChangePasswordButton from "@/components/change-password-button";
+import ChangeUsernameButton from "@/components/change-username-button";
 
 export default async function UserAccountPage() {
   const supabase = await createClient();
@@ -14,13 +14,13 @@ export default async function UserAccountPage() {
   }
 
   const formattedDate = new Date(user.created_at).toLocaleDateString("en-GB");
-  const username = user.user_metadata?.username || "Kasutajanimi pole määratud";
+  const initialUsername =
+    user.user_metadata?.username || "Kasutajanimi pole määratud";
 
   return (
     <div className="flex flex-col items-center p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-6">
-      {/* profile pic */}
+      {/* profiilipilt kui tahame lisada siis on koht olemas */}
       <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
-        {/* mdea kas kasutame profiilipilti, igastahes voimalik on */}
         <img
           src="path/to/profile-picture"
           alt="Konto Profiilipilt"
@@ -28,10 +28,13 @@ export default async function UserAccountPage() {
         />
       </div>
 
-      {/* kasutajanimi */}
-      <h2 className="text-2xl font-bold mb-4">{username}</h2>
+      {/* Muuda kasutajanime */}
+      <ChangeUsernameButton
+        email={user.email as string}
+        initialUsername={initialUsername}
+      />
 
-      {/* konto asjad */}
+      {/* Konto info */}
       <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
         <div>
           <p className="text-sm text-gray-500">E-mail:</p>
@@ -45,16 +48,16 @@ export default async function UserAccountPage() {
           <p className="text-sm text-gray-500">Kasutaja alates:</p>
           <p className="text-lg font-medium">{formattedDate}</p>
         </div>
-        {/* change pw nupp */}
+
+        {/* muuda parooli nupp */}
         <ChangePasswordButton email={user.email as string} />
       </div>
 
-      {/* retseptide koht */}
+      {/* retseptide osa kui tahame lisada, tegin lihtsalt figma järgi */}
       <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
         <p className="text-lg font-medium">
           Loodud retseptid ja nende statistika
         </p>
-        {/* retseptide loogika */}
       </div>
     </div>
   );

@@ -29,9 +29,9 @@ const ChangePasswordButton = ({ email }: { email: string }) => {
       disabled={loading}
       size="box"
       variant="link"
-      className="mt-4"
+      className="w-full"
     >
-      {loading ? "Sending..." : "Muuda Parooli"}
+      {loading ? "Saadan..." : "Muuda Parooli"}
     </Button>
   );
 };
