@@ -1,37 +1,49 @@
+"use client";
+
 import * as React from "react";
 import { Button, type ButtonProps } from "./button";
 import { cn } from "@/lib/utils";
-import { FaHeart } from "react-icons/fa";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 interface LikeButtonProps extends ButtonProps {
   liked?: boolean;
   onLikeToggle?: () => void;
+  isInitiallyLiked?: boolean;
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({
-  liked = false,
+  isInitiallyLiked = false,
   onLikeToggle,
   className,
   ...props
 }) => {
+  const [liked, setLiked] = React.useState(isInitiallyLiked);
+
+  const handleToggle = () => {
+    setLiked((prevLiked) => !prevLiked);
+    if (onLikeToggle) onLikeToggle();
+  };
+
   return (
     <Button
-      variant="ghost"
+      variant="icon"
       size="icon"
       className={cn(
         "flex items-center justify-center transition-colors",
         className
       )}
-      onClick={onLikeToggle}
+      onClick={handleToggle}
       {...props}
     >
-      <FaHeart
+      <FavoriteIcon
         className={cn(
-          "h-6 w-6",
-          liked ? "text-red-600 stroke-black" : "text-white stroke-black",
-          "transition-colors",
-          "stroke-2"
+          "h-6 w-6 transition-colors",
+          liked ? "text-red-600" : "text-white"
         )}
+        sx={{
+          stroke: "black",
+          strokeWidth: 1.5,
+        }}
       />
     </Button>
   );
