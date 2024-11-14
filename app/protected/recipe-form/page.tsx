@@ -230,9 +230,9 @@ export default function RecipeForm() {
   return (
     <form onSubmit={addRecipe}>
       {errors.length > 0 && (
-        <Alert color="red" onDismiss={() => setErrors([])}>
+        <Alert color="red" onDismiss={() => setErrors([])} className="mb-4">
           <span className="font-medium">Palun täida järgmised väljad:</span>
-          <ul className="mt-2 ml-4 list-disc list-inside">
+          <ul className="mt-2 ml-4 list-disc list-inside text-sm text-red-600">
             {errors.map((error, index) => (
               <li key={index}>{error}</li>
             ))}
@@ -240,18 +240,28 @@ export default function RecipeForm() {
         </Alert>
       )}
 
-      <Label htmlFor="title">Pealkiri</Label>
-      <Input
-        id="title"
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <div className="space-y-2">
+        <Label
+          htmlFor="title"
+          className="block text-lg font-medium text-gray-700"
+        >
+          Pealkiri
+        </Label>
+        <Input
+          id="title"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="w-full p-2 border rounded-md"
+        />
+      </div>
 
-      <div>
-        <Label>Koostisosad</Label>
+      <div className="space-y-2">
+        <Label className="block text-lg font-medium text-gray-700">
+          Koostisosad
+        </Label>
         {ingredients.map((ingredient, index) => (
-          <div key={index}>
+          <div key={index} className="flex items-center gap-2">
             <Input
               type="text"
               placeholder="Koostisosa nimi"
@@ -259,6 +269,7 @@ export default function RecipeForm() {
               onChange={(e) =>
                 handleIngredientChange(index, "name", e.target.value)
               }
+              className="flex-1 p-2 border rounded-md"
             />
             <Input
               type="text"
@@ -267,72 +278,120 @@ export default function RecipeForm() {
               onChange={(e) =>
                 handleIngredientChange(index, "quantity", e.target.value)
               }
+              className="flex-1 p-2 border rounded-md"
             />
-            <button type="button" onClick={() => removeIngredientField(index)}>
+            <button
+              type="button"
+              onClick={() => removeIngredientField(index)}
+              className="text-red-600 hover:text-red-700 text-sm"
+            >
               Eemalda
             </button>
           </div>
         ))}
-        <button type="button" onClick={addIngredientField}>
+        <button
+          type="button"
+          onClick={addIngredientField}
+          className="text-red-600 hover:text-red-700 text-sm"
+        >
           Lisa koostisosa
         </button>
       </div>
 
-      <Label htmlFor="servings">Portsjonite arv</Label>
-      <select
-        id="servings"
-        value={servings}
-        onChange={(e) => setServings(parseInt(e.target.value))}
-      >
-        <option value="">Vali portsjonite arv</option>
-        {Array.from({ length: 10 }, (_, i) => i + 1).map((number) => (
-          <option key={number} value={number}>
-            {number}
-          </option>
-        ))}
-      </select>
-      <br></br>
+      <div className="space-y-2">
+        <Label
+          htmlFor="servings"
+          className="block text-lg font-medium text-gray-700"
+        >
+          Portsjonite arv
+        </Label>
+        <select
+          id="servings"
+          value={servings}
+          onChange={(e) => setServings(parseInt(e.target.value))}
+          className="w-full p-2 border rounded-md"
+        >
+          <option value="">Vali portsjonite arv</option>
+          {Array.from({ length: 10 }, (_, i) => i + 1).map((number) => (
+            <option key={number} value={number}>
+              {number}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <Label htmlFor="categories">Kategooria</Label>
-      <select
-        id="categories"
-        value={selectedCategory}
-        onChange={(e) => setSelectedCategory(e.target.value)}
-      >
-        <option value="">Vali kategooria</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.category_name}
-          </option>
-        ))}
-      </select>
-      <br></br>
-      <Label htmlFor="totalTimeMinutes">Valmistusaeg (minutites)</Label>
-      <Input
-        id="totalTimeMinutes"
-        type="number"
-        value={totalTimeMinutes}
-        onChange={(e) => setTotalTimeMinutes(parseInt(e.target.value))}
-      />
+      <div className="space-y-2">
+        <Label
+          htmlFor="categories"
+          className="block text-lg font-medium text-gray-700"
+        >
+          Kategooria
+        </Label>
+        <select
+          id="categories"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+          className="w-full p-2 border rounded-md"
+        >
+          <option value="">Vali kategooria</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.category_name}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <Label htmlFor="stepsDescription">Valmistusjuhend</Label>
-      <Input
-        id="stepsDescription"
-        type="text"
-        value={stepsDescription}
-        onChange={(e) => setStepsDescription(e.target.value)}
-      />
+      <div className="space-y-2">
+        <Label
+          htmlFor="totalTimeMinutes"
+          className="block text-lg font-medium text-gray-700"
+        >
+          Valmistusaeg (minutites)
+        </Label>
+        <Input
+          id="totalTimeMinutes"
+          type="number"
+          value={totalTimeMinutes}
+          onChange={(e) => setTotalTimeMinutes(parseInt(e.target.value))}
+          className="w-full p-2 border rounded-md"
+        />
+      </div>
 
-      <Label htmlFor="image">Retsepti pilt</Label>
-      <Input
-        id="image"
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-      />
+      <div className="space-y-2">
+        <Label
+          htmlFor="stepsDescription"
+          className="block text-lg font-medium text-gray-700"
+        >
+          Valmistusjuhend
+        </Label>
+        <Input
+          id="stepsDescription"
+          type="text"
+          value={stepsDescription}
+          onChange={(e) => setStepsDescription(e.target.value)}
+          className="w-full p-2 border rounded-md"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label
+          htmlFor="image"
+          className="block text-lg font-medium text-gray-700"
+        >
+          Retsepti pilt
+        </Label>
+        <Input
+          id="image"
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="w-full p-2 border rounded-md"
+        />
+      </div>
 
       {image && (
-        <div>
+        <div className="my-4">
           <Cropper
             src={URL.createObjectURL(image)}
             style={{
@@ -341,7 +400,6 @@ export default function RecipeForm() {
               maxWidth: "400px",
               maxHeight: "400px",
               borderRadius: "8px",
-              marginBottom: "15px",
             }}
             initialAspectRatio={1}
             aspectRatio={1}
@@ -354,7 +412,12 @@ export default function RecipeForm() {
         </div>
       )}
 
-      <button type="submit">Postita</button>
+      <button
+        type="submit"
+        className="w-full py-3 mt-4 font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none"
+      >
+        Postita
+      </button>
     </form>
   );
 }
