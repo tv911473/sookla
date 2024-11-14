@@ -43,7 +43,7 @@ export default function RecipeForm() {
     if (!servings) missingFields.push("Portsjonite arv");
     if (!selectedCategory) missingFields.push("Kategooria");
     if (!totalTimeMinutes) missingFields.push("Valmistusaeg");
-    if (!stepsDescription) missingFields.push("Valmstusjuhend");
+    if (!stepsDescription) missingFields.push("Valmistusjuhend");
 
     if (missingFields.length > 0) {
       setErrors(missingFields);
@@ -228,133 +228,201 @@ export default function RecipeForm() {
   };
 
   return (
-    <form onSubmit={addRecipe}>
+    <div className="max-w-screen-2xl mx-auto p-4">
       {errors.length > 0 && (
-        <Alert color="red" onDismiss={() => setErrors([])}>
+        <Alert color="red" onDismiss={() => setErrors([])} className="mb-4">
           <span className="font-medium">Palun täida järgmised väljad:</span>
-          <ul className="mt-2 ml-4 list-disc list-inside">
+          <ul className="mt-2 ml-4 list-disc list-inside text-sm text-red-600">
             {errors.map((error, index) => (
               <li key={index}>{error}</li>
             ))}
           </ul>
         </Alert>
       )}
-
-      <Label htmlFor="title">Pealkiri</Label>
-      <Input
-        id="title"
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-
-      <div>
-        <Label>Koostisosad</Label>
-        {ingredients.map((ingredient, index) => (
-          <div key={index}>
-            <Input
-              type="text"
-              placeholder="Koostisosa nimi"
-              value={ingredient.name}
-              onChange={(e) =>
-                handleIngredientChange(index, "name", e.target.value)
-              }
-            />
-            <Input
-              type="text"
-              placeholder="Kogus"
-              value={ingredient.quantity}
-              onChange={(e) =>
-                handleIngredientChange(index, "quantity", e.target.value)
-              }
-            />
-            <button type="button" onClick={() => removeIngredientField(index)}>
-              Eemalda
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={addIngredientField}>
-          Lisa koostisosa
-        </button>
-      </div>
-
-      <Label htmlFor="servings">Portsjonite arv</Label>
-      <select
-        id="servings"
-        value={servings}
-        onChange={(e) => setServings(parseInt(e.target.value))}
+      <form
+        onSubmit={addRecipe}
+        className="p-12 mb-12 mt-10 border shadow-xl bg-red-100 rounded-lg w-[750px] mx-auto"
       >
-        <option value="">Vali portsjonite arv</option>
-        {Array.from({ length: 10 }, (_, i) => i + 1).map((number) => (
-          <option key={number} value={number}>
-            {number}
-          </option>
-        ))}
-      </select>
-      <br></br>
-
-      <Label htmlFor="categories">Kategooria</Label>
-      <select
-        id="categories"
-        value={selectedCategory}
-        onChange={(e) => setSelectedCategory(e.target.value)}
-      >
-        <option value="">Vali kategooria</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.category_name}
-          </option>
-        ))}
-      </select>
-      <br></br>
-      <Label htmlFor="totalTimeMinutes">Valmistusaeg (minutites)</Label>
-      <Input
-        id="totalTimeMinutes"
-        type="number"
-        value={totalTimeMinutes}
-        onChange={(e) => setTotalTimeMinutes(parseInt(e.target.value))}
-      />
-
-      <Label htmlFor="stepsDescription">Valmistusjuhend</Label>
-      <Input
-        id="stepsDescription"
-        type="text"
-        value={stepsDescription}
-        onChange={(e) => setStepsDescription(e.target.value)}
-      />
-
-      <Label htmlFor="image">Retsepti pilt</Label>
-      <Input
-        id="image"
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-      />
-
-      {image && (
-        <div>
-          <Cropper
-            src={URL.createObjectURL(image)}
-            style={{
-              height: "auto",
-              width: "100%",
-              maxWidth: "400px",
-              maxHeight: "400px",
-              borderRadius: "8px",
-              marginBottom: "15px",
-            }}
-            initialAspectRatio={1}
-            aspectRatio={1}
-            guides={false}
-            ref={cropperRef}
-            viewMode={1}
-            minContainerWidth={400}
-            minContainerHeight={400}
+        <div className="space-y-2">
+          <Label
+            htmlFor="title"
+            className="block text-lg font-medium text-black"
+          >
+            Pealkiri
+          </Label>
+          <Input
+            id="title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full p-2 border rounded-md"
           />
         </div>
-      )}
 
-      <button type="submit">Postita</button>
-    </form>
+        <div className="space-y-2">
+          <Label className="block text-lg font-medium text-black">
+            Koostisosad
+          </Label>
+          {ingredients.map((ingredient, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Input
+                type="text"
+                placeholder="Koostisosa nimi"
+                value={ingredient.name}
+                onChange={(e) =>
+                  handleIngredientChange(index, "name", e.target.value)
+                }
+                className="flex-1 p-2 border rounded-md"
+              />
+              <Input
+                type="text"
+                placeholder="Kogus"
+                value={ingredient.quantity}
+                onChange={(e) =>
+                  handleIngredientChange(index, "quantity", e.target.value)
+                }
+                className="flex-1 p-2 border rounded-md"
+              />
+              <button
+                type="button"
+                onClick={() => removeIngredientField(index)}
+                className="p-2 font-semibold text-white text-sm bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none"
+              >
+                Eemalda
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addIngredientField}
+            className="w-full py-2 px-2 font-semibold text-white text-sm bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none"
+          >
+            Lisa koostisosa
+          </button>
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="servings"
+            className="block text-lg font-medium text-black"
+          >
+            Portsjonite arv
+          </Label>
+          <select
+            id="servings"
+            value={servings}
+            onChange={(e) => setServings(parseInt(e.target.value))}
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="">Vali portsjonite arv</option>
+            {Array.from({ length: 10 }, (_, i) => i + 1).map((number) => (
+              <option key={number} value={number}>
+                {number}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="categories"
+            className="block text-lg font-medium text-black"
+          >
+            Kategooria
+          </Label>
+          <select
+            id="categories"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="">Vali kategooria</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.category_name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="totalTimeMinutes"
+            className="block text-lg font-medium text-black"
+          >
+            Valmistusaeg (minutites)
+          </Label>
+          <Input
+            id="totalTimeMinutes"
+            type="number"
+            value={totalTimeMinutes}
+            onChange={(e) => setTotalTimeMinutes(parseInt(e.target.value))}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="stepsDescription"
+            className="block text-lg font-medium text-black"
+          >
+            Valmistusjuhend
+          </Label>
+          <textarea
+            id="stepsDescription"
+            value={stepsDescription}
+            onChange={(e) => setStepsDescription(e.target.value)}
+            rows={6}
+            cols={5}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label
+            htmlFor="image"
+            className="block text-lg font-medium text-black"
+          >
+            Retsepti pilt
+          </Label>
+          <Input
+            id="image"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full p-2 border rounded-md"
+          />
+        </div>
+
+        {image && (
+          <div className="my-4">
+            <Cropper
+              src={URL.createObjectURL(image)}
+              style={{
+                height: "auto",
+                width: "100%",
+                maxWidth: "400px",
+                maxHeight: "400px",
+                borderRadius: "8px",
+              }}
+              initialAspectRatio={1}
+              aspectRatio={1}
+              guides={false}
+              ref={cropperRef}
+              viewMode={1}
+              minContainerWidth={400}
+              minContainerHeight={400}
+            />
+          </div>
+        )}
+
+        <button
+          type="submit"
+          className="w-full py-3 mt-4 font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none"
+        >
+          Postita
+        </button>
+      </form>
+    </div>
   );
 }
