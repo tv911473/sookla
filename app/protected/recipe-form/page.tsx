@@ -27,7 +27,7 @@ export default function RecipeForm() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([
     { name: "", quantity: "" },
   ]);
-  const [image, setImage] = useState<File | null>(null); 
+  const [image, setImage] = useState<File | null>(null);
   const cropperRef = useRef<ReactCropperElement>(null);
 
   useEffect(() => {
@@ -233,14 +233,21 @@ export default function RecipeForm() {
       </div>
 
       <Label htmlFor="servings">Portsjonite arv</Label>
-      <Input
+      <select
         id="servings"
-        type="number"
         value={servings}
         onChange={(e) => setServings(parseInt(e.target.value))}
-      />
+      >
+        <option value="">Vali portsjonite arv</option>
+        {Array.from({ length: 10 }, (_, i) => i + 1).map((number) => (
+          <option key={number} value={number}>
+            {number}
+          </option>
+        ))}
+      </select>
+      <br></br>
 
-      <Label htmlFor="categories"></Label>
+      <Label htmlFor="categories">Kategooria</Label>
       <select
         id="categories"
         value={selectedCategory}
