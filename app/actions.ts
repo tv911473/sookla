@@ -127,7 +127,7 @@ export const getAllRecipesAction = async () => {
 
   let { data: recipes, error } = await supabase
     .from("published_recipes")
-    .select(`*, categories(*), ingredients!inner(*)`);
+    .select(`*, categories(*), ingredients!inner(*)`).order('time_of_creation', { ascending: false });
   console.log("server read all");
 
   if (error) {
@@ -154,3 +154,4 @@ export const getSingleRecipe = async (id: number) => {
 
   return recipe;
 };
+
