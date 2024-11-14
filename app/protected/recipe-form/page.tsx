@@ -117,8 +117,8 @@ export default function RecipeForm() {
   const addRecipe = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!title) {
-      console.error("Title is required.");
+    if (!title || !ingredients || !servings || !categories || !totalTimeMinutes || !stepsDescription) {
+      console.error("All fields, except image field, are required.");
       return;
     }
 
