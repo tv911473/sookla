@@ -4,7 +4,6 @@ import { encodedRedirect } from "@/utils/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { Recipe } from "@/types/Recipe";
 
 export const signUpAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
@@ -127,7 +126,7 @@ export const getAllRecipesAction = async () => {
 
   let { data: recipes, error } = await supabase
     .from("published_recipes")
-    .select(`*, categories(*), ingredients!inner(*)`);
+    .select(`*, categories(*), ingredients!inner(*)`).order('time_of_creation', { ascending: false });
   console.log("server read all");
 
   if (error) {

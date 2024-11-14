@@ -1,8 +1,9 @@
 import { Recipe } from "@/types/Recipe";
+import { getImageUrl } from "@/utils/supabase/utils";
 import Link from "next/link";
 
 export function RecipeCard({ recipe }: { recipe: Recipe }) {
-  const placeholderImage = "https://via.placeholder.com/150";
+  const imageUrl = getImageUrl(recipe.image_url);
 
   return (
     <Link
@@ -12,7 +13,7 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
     >
       <div className="flex flex-col">
         <img
-          src={placeholderImage}
+          src={imageUrl}
           alt={recipe.title}
           className="auto-height-img mb-8 rounded-lg"
         />
