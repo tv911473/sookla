@@ -39,15 +39,14 @@ const LikeButton: React.FC<LikeButtonProps> = ({
           .from("liked_recipes")
           .select("published_recipes_id")
           .eq("users_id", userId)
-          .eq("published_recipes_id", recipeId)
-          .single();
+          .eq("published_recipes_id", recipeId);
 
         if (error) {
           console.error("Error fetching like status:", error.message);
           return;
         }
 
-        setLiked(!!data);
+        setLiked(data && data.length > 0);
       }
     };
 
