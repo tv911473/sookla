@@ -6,6 +6,7 @@ import { Label } from "@radix-ui/react-label";
 import { Cropper, ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { Alert } from "flowbite-react";
+import { useRouter } from "next/navigation";
 
 type Category = {
   id: number;
@@ -31,6 +32,7 @@ export default function RecipeForm() {
   const [image, setImage] = useState<File | null>(null);
   const cropperRef = useRef<ReactCropperElement>(null);
   const [errors, setErrors] = useState<string[]>([]);
+  const router = useRouter();
 
   const validateForm = () => {
     const missingFields = [];
@@ -225,6 +227,8 @@ export default function RecipeForm() {
     setTotalTimeMinutes(0);
     setStepsDescription("");
     setImage(null);
+
+    router.push("/protected/user-recipes");
   };
 
   return (
