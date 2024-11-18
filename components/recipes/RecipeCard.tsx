@@ -6,9 +6,14 @@ import { LikeButton } from "../ui/like-button";
 interface RecipeCardProps {
   recipe: Recipe;
   isLoggedIn: boolean;
+  isInitiallyLiked: boolean;
 }
 
-export function RecipeCard({ recipe, isLoggedIn }: RecipeCardProps) {
+export function RecipeCard({
+  recipe,
+  isLoggedIn,
+  isInitiallyLiked,
+}: RecipeCardProps) {
   const imageUrl = getImageUrl(recipe.image_url);
 
   return (
@@ -45,7 +50,10 @@ export function RecipeCard({ recipe, isLoggedIn }: RecipeCardProps) {
       </div>
       {isLoggedIn && (
         <div>
-          <LikeButton />
+          <LikeButton
+            recipeId={recipe.id}
+            isInitiallyLiked={isInitiallyLiked}
+          />
         </div>
       )}
     </div>
