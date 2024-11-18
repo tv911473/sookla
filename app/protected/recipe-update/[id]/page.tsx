@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useRouter, useParams } from "next/navigation"; 
+import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
@@ -36,43 +36,85 @@ export default function UpdateRecipeForm() {
   const [errors, setErrors] = useState<string[]>([]);
   const cropperRef = useRef<ReactCropperElement>(null);
 
-useEffect(() => {
-  const fetchRecipeData = async () => {
-    const { data: recipe, error: recipeError } = await supabase
-      .from("published_recipes")
-      .select("*")
-      .eq("id", id)
-      .single();
+  useEffect(() => {
+    const fetchRecipeData = async () => {
+      const { data: recipe, error: recipeError } = await supabase
+        .from("published_recipes")
+        .select("*")
+        .eq("id", id)
+        .single();
 
-    if (recipeError) {
-      console.error("Error fetching recipe:", recipeError);
-      return;
-    }
+      if (recipeError) {
+        console.error("Error fetching recipe:", recipeError);
+        return;
+      }
 
-    setTitle(recipe.title);
-    setServings(recipe.servings);
-    setSelectedCategory(recipe.categories_id);
-    setTotalTimeMinutes(recipe.total_time_minutes);
-    setStepsDescription(recipe.steps_description);
+      setTitle(recipe.title);
+      setServings(recipe.servings);
+      setSelectedCategory(recipe.categories_id);
+      setTotalTimeMinutes(recipe.total_time_minutes);
+      setStepsDescription(recipe.steps_description);
 
-    
-  };
+      const ingredientIds = recipe.ingredients_id;
 
-  const fetchCategories = async () => {
-    const { data, error } = await supabase.from("categories").select("*");
+      if (ingredientIds) {
+        const { data: ingredientsData, error: ingredientsError } =
+          await supabase
+            .from("ingredients")
+            .select("ingredient_text")
+            .in(
+              "id",
+              Array.isArray(ingredientIds) ? ingredientIds : [ingredientIds]
+            );
 
-    if (error) {
-      console.error("Error fetching categories:", error);
-      return;
-    }
+        if (ingredientsError) {
+          console.error("Error fetching ingredients:", ingredientsError);
+          return;
+        }
 
-    setCategories(data || []);
-  };
+        const mappedIngredients = ingredientsData.map((ingredient) => {
+          const ingredientList = ingredient.ingredient_text
+            .split(",")
+            .map((ingredient: string) => ingredient.trim());
 
-  fetchRecipeData();
-  fetchCategories();
-}, [id]);
+          return ingredientList.map((item: string) => {
+            const match = item.match(/^(.+?)\s+(\d+(\.\d+)?\s*\w+)$/);
 
+            if (match) {
+              const [, name, quantity] = match;
+              return {
+                name: name.trim(),
+                quantity: quantity.trim(),
+              };
+            } else {
+              return {
+                name: item.trim(),
+                quantity: "",
+              };
+            }
+          });
+        });
+
+        setIngredients(mappedIngredients.flat());
+      } else {
+        setIngredients([{ name: "", quantity: "" }]);
+      }
+    };
+
+    const fetchCategories = async () => {
+      const { data, error } = await supabase.from("categories").select("*");
+
+      if (error) {
+        console.error("Error fetching categories:", error);
+        return;
+      }
+
+      setCategories(data || []);
+    };
+
+    fetchRecipeData();
+    fetchCategories();
+  }, [id]);
 
   const addIngredientField = () => {
     setIngredients([...ingredients, { name: "", quantity: "" }]);
@@ -126,46 +168,64 @@ useEffect(() => {
 
     if (!validateForm()) return;
 
-    let imagePath = null;
-    if (image) {
-      const croppedImageURL = await cropperRef.current?.cropper
-        .getCroppedCanvas()
-        .toDataURL();
+    /* const croppedImageURL = await getCroppedImageURL();
+    const imagePath = croppedImageURL
+      ? await uploadImage(croppedImageURL)
+      : null;
 
-      const blob = await (await fetch(croppedImageURL)).blob();
-      const fileExtension = image?.name.split(".").pop();
-      const filePath = `recipe-images/${Date.now()}.${fileExtension}`;
+    const { data: sessionData, error: sessionError } =
+      await supabase.auth.getSession();
+    if (sessionError) {
+      console.error("Error fetching session:", sessionError.message);
+      return;
+    } */
 
-      const { data, error } = await supabase.storage
-        .from("recipe-images")
-        .upload(filePath, blob);
+    /* const userId = sessionData?.session?.user?.id;
+    if (!userId) {
+      console.error("User must be logged in to submit a recipe.");
+      return;
+    } */
 
-      if (error) {
-        console.error("Error uploading image:", error.message);
-        return;
-      }
-      imagePath = data?.path;
-    }
+    const ingredientText = ingredients
+      .map((ingredient) => `${ingredient.name} ${ingredient.quantity}`)
+      .join(", ");
 
-    const { error } = await supabase
-      .from("published_recipes")
-      .update({
-        title,
-        servings,
-        categories_id: parseInt(selectedCategory),
-        total_time_minutes: totalTimeMinutes,
-        steps_description: stepsDescription,
-        ingredients, 
-        image_url: imagePath || undefined, 
+    const { data, error } = await supabase
+      .from("ingredients")
+      .insert({
+        ingredient_text: ingredientText,
       })
-      .eq("id", id);
+      .select("id")
+      .single();
 
     if (error) {
-      console.error("Error updating recipe:", error.message);
+      console.error("Error adding ingredient:", error);
       return;
     }
 
-    alert("Recipe updated successfully!");
+    const ingredientId = data?.id;
+
+    const { data: recipeData, error: recipeError } = await supabase
+      .from("published_recipes")
+      .update([
+        {
+          title,
+          servings,
+          categories_id: parseInt(selectedCategory),
+          total_time_minutes: totalTimeMinutes,
+          ingredients_id: ingredientId,
+          steps_description: stepsDescription,
+          //image_url: imagePath,
+          time_of_creation: new Date().toISOString(),
+        },
+      ])
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error updating recipe:", error);
+      return;
+    }
+
     router.push("/protected/user-recipes");
   };
 
