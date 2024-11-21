@@ -191,38 +191,48 @@ export default function UpdateRecipeForm() {
       .join(", ");
 
     const { data, error } = await supabase
-      .from("ingredients")
-      .insert({
-        ingredient_text: ingredientText,
-      })
-      .select("id")
+      .from("published_recipes")
+      .select("ingredients_id")
+      .eq("id", id)
       .single();
 
     if (error) {
-      console.error("Error adding ingredient:", error);
+      console.error("Error fetching recipe ingredients_id:", error);
       return;
     }
 
-    const ingredientId = data?.id;
+    const ingredientsId = data?.ingredients_id;
 
-    const { data: recipeData, error: recipeError } = await supabase
+    if (!ingredientsId) {
+      console.error("No ingredients_id found for this recipe.");
+      return;
+    }
+
+    const { error: ingredientUpdateError } = await supabase
+      .from("ingredients")
+      .update({ ingredient_text: ingredientText })
+      .eq("id", ingredientsId);
+
+    if (ingredientUpdateError) {
+      console.error("Error updating ingredient:", ingredientUpdateError);
+      return;
+    }
+
+    const { error: recipeUpdateError } = await supabase
       .from("published_recipes")
-      .update([
-        {
-          title,
-          servings,
-          categories_id: parseInt(selectedCategory),
-          total_time_minutes: totalTimeMinutes,
-          ingredients_id: ingredientId,
-          steps_description: stepsDescription,
-          //image_url: imagePath,
-          time_of_creation: new Date().toISOString(),
-        },
-      ])
+      .update({
+        title,
+        servings,
+        categories_id: parseInt(selectedCategory),
+        total_time_minutes: totalTimeMinutes,
+        steps_description: stepsDescription,
+        //image_url: imagePath,
+        time_of_creation: new Date().toISOString(),
+      })
       .eq("id", id);
 
-    if (error) {
-      console.error("Error updating recipe:", error);
+    if (recipeUpdateError) {
+      console.error("Error updating recipe:", recipeUpdateError);
       return;
     }
 
