@@ -33,6 +33,7 @@ export default function UpdateRecipeForm() {
     { name: "", quantity: "" },
   ]);
   const [image, setImage] = useState<File | null>(null);
+  const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const cropperRef = useRef<ReactCropperElement>(null);
 
@@ -54,6 +55,10 @@ export default function UpdateRecipeForm() {
       setSelectedCategory(recipe.categories_id);
       setTotalTimeMinutes(recipe.total_time_minutes);
       setStepsDescription(recipe.steps_description);
+
+      if (recipe.image_url) {
+        setExistingImageUrl(recipe.image_url); 
+      }
 
       const ingredientIds = recipe.ingredients_id;
 
@@ -141,6 +146,44 @@ export default function UpdateRecipeForm() {
     }
   };
 
+  const getCroppedImageURL = (): Promise<string | null> => {
+    return new Promise((resolve) => {
+      const cropper = cropperRef.current?.cropper;
+      if (cropper) {
+        resolve(cropper.getCroppedCanvas().toDataURL());
+      } else {
+        resolve(null);
+      }
+    });
+  };
+
+  const uploadImage = async (croppedImageURL: string | null) => {
+    if (!croppedImageURL) {
+      console.error("No cropped image available");
+      return null;
+    }
+
+    const blob = await (await fetch(croppedImageURL)).blob();
+    const fileExtension = image?.name.split(".").pop();
+    const filePath = `recipe-images/${Date.now()}.${fileExtension}`;
+
+    try {
+      const { data, error } = await supabase.storage
+        .from("recipe-images")
+        .upload(filePath, blob);
+
+      if (error) {
+        console.error("Error uploading image:", error.message);
+        return null;
+      }
+
+      return data?.path;
+    } catch (err) {
+      console.error("Error uploading image:", err);
+      return null;
+    }
+  };
+
   const validateForm = () => {
     const missingFields = [];
     if (!title) missingFields.push("Pealkiri");
@@ -168,23 +211,13 @@ export default function UpdateRecipeForm() {
 
     if (!validateForm()) return;
 
-    /* const croppedImageURL = await getCroppedImageURL();
-    const imagePath = croppedImageURL
-      ? await uploadImage(croppedImageURL)
-      : null;
+    let imagePath = existingImageUrl;
 
-    const { data: sessionData, error: sessionError } =
-      await supabase.auth.getSession();
-    if (sessionError) {
-      console.error("Error fetching session:", sessionError.message);
-      return;
-    } */
-
-    /* const userId = sessionData?.session?.user?.id;
-    if (!userId) {
-      console.error("User must be logged in to submit a recipe.");
-      return;
-    } */
+    if (image) {
+      const croppedImageURL = await getCroppedImageURL();
+      const uploadedPath = await uploadImage(croppedImageURL);
+      imagePath = uploadedPath || existingImageUrl; 
+    }
 
     const ingredientText = ingredients
       .map((ingredient) => `${ingredient.name} ${ingredient.quantity}`)
@@ -226,7 +259,7 @@ export default function UpdateRecipeForm() {
         categories_id: parseInt(selectedCategory),
         total_time_minutes: totalTimeMinutes,
         steps_description: stepsDescription,
-        //image_url: imagePath,
+        image_url: imagePath,
         time_of_creation: new Date().toISOString(),
       })
       .eq("id", id);
@@ -396,6 +429,22 @@ export default function UpdateRecipeForm() {
             className="block text-lg font-medium text-black"
           >
             Retsepti pilt
+          </Label>
+          {existingImageUrl && !image && (
+            <div className="my-4">
+              <img
+                src={`https://emetryzjnikmcwiqgjtv.supabase.co/storage/v1/object/public/recipe-images/${existingImageUrl}`}
+                alt="Existing Recipe Image"
+                className="w-full max-w-xs rounded-md"
+              />
+            </div>
+          )}
+
+          <Label
+            htmlFor="image"
+            className="block text-lg font-medium text-black"
+          >
+            Lisa uus pilt
           </Label>
           <Input
             id="image"
