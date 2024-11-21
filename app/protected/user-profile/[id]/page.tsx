@@ -1,6 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import BackButton from "@/components/back-button";
+import { FollowButton } from "@/components/ui/follow-button";
 
 export default async function UserProfilePage({
   params,
@@ -59,6 +60,7 @@ export default async function UserProfilePage({
 
       {/* Tagasi nupp */}
       <BackButton />
+      <FollowButton targetUserId={data.id} />
     </div>
   );
 }
