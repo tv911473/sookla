@@ -145,7 +145,7 @@ export const getAllRecipesAction = async (): Promise<Recipe[]> => {
 
     .select(`*, categories(*), ingredients!inner(*)`)
     .order("time_of_creation", { ascending: false });
-  console.log("server read all");
+  //console.log("server read all");
 
   if (error) {
     console.log("Error serveri retseptide kätte saamisel");
@@ -163,7 +163,7 @@ export const getSingleRecipe = async (id: number) => {
     .eq("id", id)
     .single();
 
-  console.log(recipe);
+  //console.log(recipe);
 
   if (error) {
     console.log("Error ühe serveri retsepti kättesaamisel");
@@ -206,4 +206,20 @@ export const getLikedRecipesAction = async (
   }
 
   return data.map((like) => like.published_recipes_id);
+};
+
+export const getCateories = async ()=> {
+  const supabase = await createClient();
+  const { data: categories, error } = await supabase
+    .from("categories")
+    .select("category_name");
+
+  if (error) {
+    console.error("Error kategooriate kättesaamisel")
+    return [];
+  }
+
+  console.log(categories)
+
+  return categories;
 };

@@ -15,7 +15,7 @@ export default async function AuthButton() {
     return (
       <>
         <div className="flex gap-4 items-center">
-          <div className="flex gap-2">
+          <div className="flex gap-2 bg-red-100">
             <Button
               asChild
               size="sm"
@@ -57,7 +57,7 @@ export default async function AuthButton() {
       </div>
       <div className="flex items-center gap-2">
         <form action={signOutAction}>
-          <Button type="submit" size="sm" variant={"outline"}>
+          <Button type="submit" size="sm" variant={"outline"} className="bg-pink-50 hover:bg-red-200 border-0 border-black">
             Logi välja
           </Button>
         </form>

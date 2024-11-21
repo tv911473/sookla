@@ -5,7 +5,9 @@ export type Recipe = {
   title: string;
   servings: number;
   categories_id: number;
-  categories: { category_name: string };
+  categories: {
+    [x: string]: any; category_name: string 
+};
   total_time_minutes: number;
   ingredients_id: number;
   ingredients: { ingredient_text: string };
