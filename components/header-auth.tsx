@@ -51,6 +51,9 @@ export default async function AuthButton() {
         <Button size="sm" variant={"default"}>
           <Link href="/protected/user-account">Konto</Link>
         </Button>
+        <Button size="sm" variant={"default"}>
+          <Link href="/protected/search">Otsi kasutajaid</Link>
+        </Button>
       </div>
       <div className="flex items-center gap-2">
         <form action={signOutAction}>
