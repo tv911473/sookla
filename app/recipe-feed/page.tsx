@@ -39,12 +39,12 @@ export default function RecipeFeed({
   };
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-4">
       <CategoryFilter
         onFilterChange={handleFilterChange}
         categories={categories}
       />
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-10">
         {filteredRecipes.map((recipe) => (
           <RecipeCard
             key={recipe.id}
