@@ -13,9 +13,19 @@ export default async function UserAccountPage() {
     return <p>Sa pead olema sisse logitud et näha seda lehte.</p>;
   }
 
+  // Fetch user data from the public.users table to get the username
+  const { data: userData, error } = await supabase
+    .from("users")
+    .select("username")
+    .eq("id", user.id)
+    .single();
+
+  if (error || !userData) {
+    return <p>Kasutaja andmeid ei leitud.</p>;
+  }
+
   const formattedDate = new Date(user.created_at).toLocaleDateString("en-GB");
-  const initialUsername =
-    user.user_metadata?.username || "Kasutajanimi pole määratud";
+  const username = userData.username || "Kasutajanimi pole määratud";
 
   return (
     <div className="flex flex-col items-center p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-6">
@@ -31,11 +41,15 @@ export default async function UserAccountPage() {
       {/* Muuda kasutajanime */}
       <ChangeUsernameButton
         email={user.email as string}
-        initialUsername={initialUsername}
+        initialUsername={username}
       />
 
       {/* Konto info */}
       <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
+        <div>
+          <p className="text-sm text-gray-500">Kasutajanimi:</p>
+          <p className="text-lg font-medium">{username}</p>
+        </div>
         <div>
           <p className="text-sm text-gray-500">E-mail:</p>
           <p className="text-lg font-medium">{user.email}</p>

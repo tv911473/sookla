@@ -18,31 +18,34 @@ const ChangeUsernameButton = ({
   const router = useRouter();
 
   const handleClick = async () => {
-    if (email) {
-      setLoading(true);
-      const supabase = await createClient();
+    if (!username.trim()) {
+      alert("Kasutajanimi ei saa olla tühi!");
+      return;
+    }
 
-      // Uuendab nime
-      const { error } = await supabase.auth.updateUser({
-        data: { username },
-      });
+    setLoading(true);
+    const supabase = await createClient();
 
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .update({ username })
+        .eq("email", email);
+
+      if (error) throw new Error(error.message);
+
+      alert("Kasutajanimi on edukalt muudetud!");
+      setIsEditing(false);
+      router.refresh();
+    } catch (error: any) {
+      alert("Kasutajanime muutmine ebaõnnestus: " + error.message);
+    } finally {
       setLoading(false);
-      if (error) {
-        alert("Kasutajanime vahetamine ebaõnnestus: " + error.message);
-      } else {
-        alert("Kasutajanimi vahetatud!");
-        setIsEditing(false);
-        router.refresh();
-      }
-    } else {
-      alert("Selle kasutajaga ei ole seotud e-maili.");
     }
   };
 
   return (
     <div>
-      {/* dünaamiline kastike kui nuppu vajutad */}
       <div className="mb-4">
         <p className="text-2xl font-bold">
           {isEditing ? (
@@ -58,7 +61,7 @@ const ChangeUsernameButton = ({
           )}
         </p>
       </div>
-      {/* toggle kas edit v cancel */}
+
       <div className="flex justify-center space-x-2">
         <Button
           onClick={() => setIsEditing((prev) => !prev)}
