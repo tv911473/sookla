@@ -30,9 +30,9 @@ export default function CategoryFilter({
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
-  }; //default, sm, lg, box, icon
+  }; 
   return (
-    <div className="relative">
+    <div className="relative mt-20">
         <Button onClick = {toggleDropdown} size="sm" variant={"default"}>Vali kategooria</Button> 
 
       {isOpen && (
