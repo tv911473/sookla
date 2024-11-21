@@ -184,6 +184,24 @@ export default function UpdateRecipeForm() {
     }
   };
 
+  const deleteExistingImage = async () => {
+    if (existingImageUrl) {
+      try {
+        const { error } = await supabase.storage
+        .from("recipe-images")
+        .remove([existingImageUrl]);
+
+        if (error) {
+          console.error("Error deleting existing image:", error.message);
+        } else {
+          console.log("Existing image deleted successfully")
+        }
+      } catch (err) {
+        console.error("Error during image deletion:", err);
+      }
+    }
+  }
+
   const validateForm = () => {
     const missingFields = [];
     if (!title) missingFields.push("Pealkiri");
@@ -214,6 +232,9 @@ export default function UpdateRecipeForm() {
     let imagePath = existingImageUrl;
 
     if (image) {
+      
+      await deleteExistingImage();
+      
       const croppedImageURL = await getCroppedImageURL();
       const uploadedPath = await uploadImage(croppedImageURL);
       imagePath = uploadedPath || existingImageUrl; 
