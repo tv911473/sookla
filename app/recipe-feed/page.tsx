@@ -1,5 +1,9 @@
+"use client";
+import CategoryFilter from "@/components/recipes/CategoryFilter";
 import { RecipeCard } from "@/components/recipes/RecipeCard";
 import { Recipe } from "@/types/Recipe";
+import { useEffect, useState } from "react";
+import { getCateories } from "../actions";
 
 interface RecipeFeedProps {
   recipes: Recipe[];
@@ -12,10 +16,36 @@ export default function RecipeFeed({
   isLoggedIn,
   likedRecipeId = [],
 }: RecipeFeedProps) {
+  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(recipes);
+  const [categories, setCategories] = useState<{ category_name: string }[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const fetchedCategories = await getCateories();
+      setCategories(fetchedCategories);
+    };
+    fetchCategories();
+  }, []);
+
+  const handleFilterChange = (selectedCategories: string[]) => {
+    if (selectedCategories.length === 0) {
+      setFilteredRecipes(recipes);
+    } else {
+      const updatedRecipes = recipes.filter((recipe) => {
+        return selectedCategories.includes(recipe.categories.category_name);
+      });
+      setFilteredRecipes(updatedRecipes);
+    }
+  };
+
   return (
     <div className="px-4 py-6">
+      <CategoryFilter
+        onFilterChange={handleFilterChange}
+        categories={categories}
+      />
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {recipes.map((recipe: Recipe) => (
+        {filteredRecipes.map((recipe) => (
           <RecipeCard
             key={recipe.id}
             recipe={recipe}
