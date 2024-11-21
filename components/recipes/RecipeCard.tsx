@@ -1,17 +1,27 @@
 import { Recipe } from "@/types/Recipe";
 import { getImageUrl } from "@/utils/supabase/utils";
 import Link from "next/link";
+import { LikeButton } from "../ui/like-button";
 
-export function RecipeCard({ recipe }: { recipe: Recipe }) {
+interface RecipeCardProps {
+  recipe: Recipe;
+  isLoggedIn: boolean;
+  isInitiallyLiked: boolean;
+}
+
+export function RecipeCard({
+  recipe,
+  isLoggedIn,
+  isInitiallyLiked,
+}: RecipeCardProps) {
   const imageUrl = getImageUrl(recipe.image_url);
 
   return (
-    <Link
+    <div
       key={recipe.id}
-      href={`/recipes/${recipe.id}`}
-      className="flex flex-col justify-between p-4 mb-4 bg-red-100 border rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow"
+      className="flex flex-col justify-between p-4 mb-4 bg-red-100 border rounded-lg shadow-m hover:shadow-lg transition-shadow"
     >
-      <div className="flex flex-col">
+      <Link className="flex flex-col" href={`/recipes/${recipe.id}`}>
         <img
           src={imageUrl}
           alt={recipe.title}
@@ -19,7 +29,7 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
         />
         <h1 className="text-xl font-semibold">{recipe.title}</h1>
         <br />
-      </div>
+      </Link>
       <div className="flex flex-col">
         <div className="flex text-sm text-gray-700">
           Portsjonid: {recipe.servings}
@@ -38,6 +48,14 @@ export function RecipeCard({ recipe }: { recipe: Recipe }) {
           Postitas: {recipe.users_id}
         </div>
       </div>
-    </Link>
+      {isLoggedIn && (
+        <div>
+          <LikeButton
+            recipeId={recipe.id}
+            isInitiallyLiked={isInitiallyLiked}
+          />
+        </div>
+      )}
+    </div>
   );
 }

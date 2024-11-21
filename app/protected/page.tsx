@@ -1,7 +1,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import RecipeFeed from "../recipe-feed/page";
-import { getAllRecipesAction } from "@/app/actions";
+import { getAllRecipesAction, getLikedRecipesAction } from "@/app/actions";
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -15,11 +15,16 @@ export default async function ProtectedPage() {
   }
 
   const allRecipes = await getAllRecipesAction();
+  const likedRecipes = await getLikedRecipesAction(user.id);
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
       <div className="flex flex-col gap-2 items-start">
-        <RecipeFeed recipes={allRecipes} />
+        <RecipeFeed
+          recipes={allRecipes}
+          isLoggedIn={true}
+          likedRecipeId={likedRecipes}
+        />
       </div>
     </div>
   );

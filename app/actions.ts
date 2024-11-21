@@ -180,3 +180,20 @@ export const getUserRecipesAction = async (
 
   return recipes ?? [];
 };
+
+export const getLikedRecipesAction = async (
+  userId: string
+): Promise<number[]> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("liked_recipes")
+    .select("published_recipes_id")
+    .eq("users_id", userId);
+
+  if (error) {
+    console.error("Error liked retseptide kättesaamisel:", error);
+    return [];
+  }
+
+  return data.map((like) => like.published_recipes_id);
+};
