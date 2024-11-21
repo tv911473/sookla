@@ -18,20 +18,30 @@ export const signUpAction = async (formData: FormData) => {
   }
 
   // Signup koos usernamega
-  const { data, error } = await supabase.auth.signUp({
+  const { data, error: authError } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: {
-        username,
-      },
       emailRedirectTo: `${origin}/auth/callback`,
     },
   });
 
-  if (error) {
-    console.error(error.message);
-    return encodedRedirect("error", "/sign-up", error.message);
+  if (authError) {
+    console.error(authError.message);
+    return encodedRedirect("error", "/sign-up", authError.message);
+  }
+
+  const userId = data?.user?.id;
+
+  const { error: publicError } = await supabase.from("users").insert({
+    id: userId,
+    email,
+    username,
+  });
+
+  if (publicError) {
+    console.error(publicError.message);
+    return { error: publicError.message };
   }
 
   return encodedRedirect(
