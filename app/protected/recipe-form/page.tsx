@@ -260,6 +260,7 @@ export default function RecipeForm() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full p-2 border rounded-md"
+            maxLength={30}
           />
         </div>
 
@@ -359,6 +360,7 @@ export default function RecipeForm() {
           <Input
             id="totalTimeMinutes"
             type="number"
+            min={0}
             value={totalTimeMinutes}
             onChange={(e) => setTotalTimeMinutes(parseInt(e.target.value))}
             className="w-full p-2 border rounded-md"
@@ -379,6 +381,7 @@ export default function RecipeForm() {
             rows={6}
             cols={5}
             className="w-full p-2 border rounded-md"
+            maxLength={2000}
           />
         </div>
 

@@ -10,6 +10,7 @@ interface RecipeFeedProps {
   likedRecipeId?: number[];
   isLoggedIn: boolean;
   isUserRecipe?: boolean;
+  isUserPage?: boolean;
 }
 
 export default function RecipeFeed({
@@ -17,6 +18,7 @@ export default function RecipeFeed({
   isLoggedIn,
   likedRecipeId = [],
   isUserRecipe = false,
+  isUserPage = false,
 }: RecipeFeedProps) {
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(recipes);
   const [categories, setCategories] = useState<{ category_name: string }[]>([]);
@@ -54,6 +56,7 @@ export default function RecipeFeed({
             isLoggedIn={isLoggedIn}
             isInitiallyLiked={likedRecipeId.includes(recipe.id)}
             isUserRecipe={isUserRecipe}
+            isUserPage={isUserPage}
           />
         ))}
       </ul>

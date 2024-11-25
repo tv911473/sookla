@@ -9,6 +9,7 @@ interface RecipeCardProps {
   isLoggedIn: boolean;
   isInitiallyLiked: boolean;
   isUserRecipe?: boolean;
+  isUserPage: boolean;
 }
 
 export function RecipeCard({
@@ -16,6 +17,7 @@ export function RecipeCard({
   isLoggedIn,
   isInitiallyLiked,
   isUserRecipe = false,
+  isUserPage,
 }: RecipeCardProps) {
   const imageUrl = getImageUrl(recipe.image_url);
 
@@ -47,9 +49,11 @@ export function RecipeCard({
         </div>
         <br />
 
-        <div className="flex text-sm text-gray-700 font-light italic">
-          Postitas: {recipe.users_id}
-        </div>
+        {!isUserPage && (
+          <div className="flex text-sm text-gray-700 font-light italic">
+            Postitas: {recipe.users.username}
+          </div>
+        )}
       </div>
       {!isUserRecipe && isLoggedIn && (
         <div>

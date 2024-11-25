@@ -143,7 +143,7 @@ export const getAllRecipesAction = async (): Promise<Recipe[]> => {
   let { data: recipes, error } = await supabase
     .from("published_recipes")
 
-    .select(`*, categories(*), ingredients!inner(*)`)
+    .select(`*, categories(*), ingredients!inner(*), users(username)`)
     .order("time_of_creation", { ascending: false });
   //console.log("server read all");
 
@@ -159,7 +159,7 @@ export const getSingleRecipe = async (id: number) => {
   const supabase = await createClient();
   let { data: recipe, error } = await supabase
     .from("published_recipes")
-    .select(`*, categories(*), ingredients!inner(*)`)
+    .select(`*, categories(*), ingredients!inner(*), users(username)`)
     .eq("id", id)
     .single();
 
@@ -208,18 +208,18 @@ export const getLikedRecipesAction = async (
   return data.map((like) => like.published_recipes_id);
 };
 
-export const getCateories = async ()=> {
+export const getCateories = async () => {
   const supabase = await createClient();
   const { data: categories, error } = await supabase
     .from("categories")
     .select("category_name");
 
   if (error) {
-    console.error("Error kategooriate kättesaamisel")
+    console.error("Error kategooriate kättesaamisel");
     return [];
   }
 
-  console.log(categories)
+  console.log(categories);
 
   return categories;
 };
