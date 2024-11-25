@@ -433,6 +433,7 @@ export default function UpdateRecipeForm() {
           <Input
             id="totalTimeMinutes"
             type="number"
+            min={0}
             value={totalTimeMinutes}
             onChange={(e) => setTotalTimeMinutes(parseInt(e.target.value))}
             className="w-full p-2 border rounded-md"
