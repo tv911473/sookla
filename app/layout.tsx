@@ -12,8 +12,7 @@ const defaultUrl = process.env.VERCEL_URL
   : "http://localhost:3000";
 
 const logo =
-  "https://emetryzjnikmcwiqgjtv.supabase.co/storage/v1/object/public/recipe-images/recipe-images/sookla.jpg?t=2024-11-21T11%3A20%3A31.590Z";
-
+  "https://emetryzjnikmcwiqgjtv.supabase.co/storage/v1/object/public/recipe-images/recipe-images/sookla6.png?t=2024-11-21T12%3A47%3A11.168Z";
 export default function RootLayout({
   children,
 }: {
