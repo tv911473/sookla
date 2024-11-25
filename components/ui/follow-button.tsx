@@ -90,6 +90,9 @@ const FollowButton: React.FC<FollowButtonProps> = ({
 
         console.log("Successfully deleted follow:", data);
       }
+
+      // Refresh the page after the follow/unfollow action
+      window.location.reload();
     } catch (error) {
       console.error("Unexpected error during follow update:", error);
       setFollowed(!newFollowed);
