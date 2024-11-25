@@ -12,19 +12,28 @@ export default async function UserProfilePage({
 
   const supabase = await createClient();
 
-  // kasutaja otsimine id jargi
-  const { data, error } = await supabase
+  const { data: userData, error: userError } = await supabase
     .from("users")
     .select("*")
     .eq("id", id)
     .single();
 
-  if (error || !data) {
+  if (userError || !userData) {
     notFound();
   }
 
-  // Hetkel pole tabelis created_at fieldi seega ehk hakkab toole kui lisada
-  const formattedDate = new Date(data.created_at).toLocaleDateString("en-GB");
+  // Fetch followers
+  const { data: followersData, error: followersError } = await supabase
+    .from("followings")
+    .select("follower_id, users!fk_follower(username)")
+    .eq("following_id", id)
+    .order("created_at", { ascending: false });
+
+  if (followersError) {
+    console.error("Error fetching followers:", followersError.message);
+  }
+
+  const followers = followersData as FollowerData[] | null;
 
   return (
     <div className="flex flex-col items-center p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-6">
@@ -32,35 +41,44 @@ export default async function UserProfilePage({
       <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
         <img
           src="path/to/profile-picture"
-          alt="Profiilipilt"
           className="w-full h-full object-cover rounded-full"
         />
+        <div className="mb-4">
+          <p className="text-2xl font-bold">
+            {userData.username || "Kasutajanimi pole määratud"}
+          </p>
+        </div>
       </div>
+
+      {/* Follow Nupp */}
+      <FollowButton targetUserId={userData.id} />
+
       {/* Kasutaja andmed */}
       <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
         <div>
-          <p className="text-sm text-gray-500">Kasutajanimi:</p>
-          <p className="text-lg font-medium">
-            {data.username || "Kasutajanimi pole määratud"}
-          </p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">E-mail:</p>
-          <p className="text-lg font-medium">{data.email}</p>
-        </div>
-        <div>
           <p className="text-sm text-gray-500">Kasutaja ID:</p>
-          <p className="text-lg font-medium">{data.id}</p>
+          <p className="text-lg font-medium">{userData.id}</p>
         </div>
-        <div>
-          <p className="text-sm text-gray-500">Liitumiskuupäev:</p>
-          <p className="text-lg font-medium">{formattedDate}</p>
-        </div>
+      </div>
+
+      {/* Followers List */}
+      <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
+        <h3 className="text-lg font-bold mb-4">Jälgijad</h3>
+        {followersData?.length ? (
+          <ul className="space-y-2">
+            {followers?.map((follower) => (
+              <li key={follower.follower_id} className="text-sm font-medium">
+                {follower.users?.username}
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-sm text-gray-500">Kasutajal ei ole jälgijaid.</p>
+        )}
       </div>
 
       {/* Tagasi nupp */}
       <BackButton />
-      <FollowButton targetUserId={data.id} />
     </div>
   );
 }
