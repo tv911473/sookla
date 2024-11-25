@@ -33,7 +33,7 @@ export default async function ProtectedPage() {
         ) : (
           <RecipeFeed
             recipes={userRecipes}
-            isLoggedIn={false}
+            isLoggedIn={true}
             isUserPage={true}
           />
         )}

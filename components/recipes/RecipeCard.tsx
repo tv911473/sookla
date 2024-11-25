@@ -2,11 +2,13 @@ import { Recipe } from "@/types/Recipe";
 import { getImageUrl } from "@/utils/supabase/utils";
 import Link from "next/link";
 import { LikeButton } from "../ui/like-button";
+import NavigateToUpdateButton from "../ui/update_button";
 
 interface RecipeCardProps {
   recipe: Recipe;
   isLoggedIn: boolean;
   isInitiallyLiked: boolean;
+  isUserRecipe?: boolean;
   isUserPage: boolean;
 }
 
@@ -14,6 +16,7 @@ export function RecipeCard({
   recipe,
   isLoggedIn,
   isInitiallyLiked,
+  isUserRecipe = false,
   isUserPage,
 }: RecipeCardProps) {
   const imageUrl = getImageUrl(recipe.image_url);
@@ -52,12 +55,18 @@ export function RecipeCard({
           </div>
         )}
       </div>
-      {isLoggedIn && (
+      {!isUserRecipe && isLoggedIn && (
         <div>
           <LikeButton
             recipeId={recipe.id}
             isInitiallyLiked={isInitiallyLiked}
           />
+        </div>
+      )}
+
+      {isUserRecipe && (
+        <div className="mt-2">
+          <NavigateToUpdateButton recipeId={(recipe.id)} />
         </div>
       )}
     </div>
