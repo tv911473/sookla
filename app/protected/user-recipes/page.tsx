@@ -2,7 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import RecipeFeed from "../../recipe-feed/page";
 import { getUserRecipesAction } from "@/app/actions";
-import Link from "next/link"; // Import Link from Next.js
+import Link from "next/link"; 
 
 export default async function ProtectedPage() {
   const supabase = await createClient();
@@ -34,6 +34,7 @@ export default async function ProtectedPage() {
           <RecipeFeed
             recipes={userRecipes}
             isLoggedIn={true}
+            isUserRecipe={true}
             isUserPage={true}
           />
         )}
