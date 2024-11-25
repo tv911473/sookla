@@ -2,6 +2,7 @@ import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import BackButton from "@/components/back-button";
 import { FollowButton } from "@/components/ui/follow-button";
+import FollowersList from "@/components/followers-list";
 
 export default async function UserProfilePage({
   params,
@@ -52,6 +53,7 @@ export default async function UserProfilePage({
 
       {/* Follow Nupp */}
       <FollowButton targetUserId={userData.id} />
+      <FollowersList followers={followers} />
 
       {/* Kasutaja andmed */}
       <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
@@ -59,22 +61,6 @@ export default async function UserProfilePage({
           <p className="text-sm text-gray-500">Kasutaja ID:</p>
           <p className="text-lg font-medium">{userData.id}</p>
         </div>
-      </div>
-
-      {/* Followers List */}
-      <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
-        <h3 className="text-lg font-bold mb-4">Jälgijad</h3>
-        {followersData?.length ? (
-          <ul className="space-y-2">
-            {followers?.map((follower) => (
-              <li key={follower.follower_id} className="text-sm font-medium">
-                {follower.users?.username}
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-gray-500">Kasutajal ei ole jälgijaid.</p>
-        )}
       </div>
 
       {/* Tagasi nupp */}
