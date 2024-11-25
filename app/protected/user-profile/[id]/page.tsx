@@ -44,11 +44,14 @@ export default async function UserProfilePage({
           src="path/to/profile-picture"
           className="w-full h-full object-cover rounded-full"
         />
-        <div className="mb-4">
-          <p className="text-2xl font-bold">
-            {userData.username || "Kasutajanimi pole määratud"}
-          </p>
-        </div>
+      </div>
+
+      {/* Kasutajanimi */}
+      <div className="mb-4 text-center">
+        {" "}
+        <p className="text-2xl font-bold">
+          {userData.username || "Kasutajanimi pole määratud"}
+        </p>
       </div>
 
       {/* Follow Nupp */}
