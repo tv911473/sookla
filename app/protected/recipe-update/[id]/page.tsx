@@ -50,6 +50,17 @@ export default function UpdateRecipeForm() {
         return;
       }
 
+      const recipeOwnerId = recipe.users_id; 
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user || user.id !== recipeOwnerId) {
+        router.push("/protected/user-recipes"); 
+        return;
+      }
+
       setTitle(recipe.title);
       setServings(recipe.servings);
       setSelectedCategory(recipe.categories_id);
