@@ -21,8 +21,8 @@ export default async function ProtectedPage() {
       <div className="flex flex-col gap-2 items-start">
         <RecipeFeed
           recipes={userRecipes}
-          isLoggedIn={false}
-          isUserPage={true}
+          isLoggedIn={true}
+          isUserRecipe={true}
         />
       </div>
     </div>
