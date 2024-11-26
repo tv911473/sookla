@@ -66,7 +66,7 @@ export default function RecipeFeed({
   };
   return (
     <div className="px-4">
-      <div className="flex flex-row items-center gap-20">
+      <div className="flex flex-row items-center gap-20 mt-10 mb-20">
         <div>
         <CategoryFilter
           onCategoryChange={handleCategoryFilterChange}

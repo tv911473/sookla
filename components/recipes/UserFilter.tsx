@@ -48,7 +48,7 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
   //ref={dropdownRef}
   
   return (
-    <div className="relative mt-20" >
+    <div className="relative" >
       <Button onClick={toggleDropdown} size="sm" variant={"default"}>
         Vali enda filter
       </Button>
@@ -65,9 +65,9 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
                 onChange={(event) =>
                   handleFilterSelect("liked", event.target.checked)
                 }
-                className="mr-2"
+                className="mr-2 accent-red-600"
               />
-              <label htmlFor="liked" className="text-black cursor-pointer">
+              <label htmlFor="liked" className="text-red-500 cursor-pointer hover:text-red-700">
                 Meeldivad retseptid
               </label>
             </div>
@@ -80,9 +80,9 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
                 onChange={(event) =>
                   handleFilterSelect("followed", event.target.checked)
                 }
-                className="mr-2"
+                className="mr-2 accent-red-600"
               />
-              <label htmlFor="followed" className="text-black cursor-pointer">
+              <label htmlFor="followed" className="text-red-500 cursor-pointer hover:text-red-700">
                 Jälgitavate kasutajate retseptid
               </label>
             </div>
