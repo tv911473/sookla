@@ -225,19 +225,19 @@ export const getCateories = async () => {
 };
 
 
-export const getFollowedUsersRecipes = async (userId: number[]): Promise<number[]> => {
+export const getFollowedUsersRecipes = async (userId: string): Promise<string[]> => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("followings")
-    .select("follower_id")
-    .eq("following_id", userId);
+    .select("following_id")
+    .eq("follower_id", userId);
 
-  console.log("getFollowedUsersRecipes", data);
+  console.log("Followed Users IDs:", data);
 
   if (error) {
-    console.error("Error followeride retseptide kättesaamisel:", error);
+    console.error("Error fetching followed users' IDs:", error);
     return [];
   }
 
-  return data ? data.map((item) => item.follower_id) : [];
+  return data ? data.map((item) => item.following_id) : [];
 };

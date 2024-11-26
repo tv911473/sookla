@@ -3,7 +3,7 @@ import CategoryFilter from "@/components/recipes/CategoryFilter";
 import { RecipeCard } from "@/components/recipes/RecipeCard";
 import { Recipe } from "@/types/Recipe";
 import { useEffect, useState } from "react";
-import { getCateories } from "../actions";
+import { getCateories, getFollowedUsersRecipes } from "../actions";
 import UserFilter from "@/components/recipes/UserFilter";
 
 interface RecipeFeedProps {
@@ -21,13 +21,18 @@ export default function RecipeFeed({
 }: RecipeFeedProps) {
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(recipes);
   const [categories, setCategories] = useState<{ category_name: string }[]>([]);
+  const [followings, setFollowings] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const fetchedCategories = await getCateories();
       setCategories(fetchedCategories);
+  
+      const fetchedFollowings = await getFollowedUsersRecipes(userId);
+      console.log("Followings:", fetchedFollowings); 
+      setFollowings(fetchedFollowings);
     };
-
+  
     fetchData();
   }, []);
 
@@ -49,7 +54,7 @@ export default function RecipeFeed({
       const updatedRecipes = recipes.filter((recipe) => {
         return (
           (selectedFilters.includes("liked") && likedRecipeId.includes(recipe.id)) ||
-          (selectedFilters.includes("followed") && recipe.users_id === userId)
+          (selectedFilters.includes("followed") && followings.includes(recipe.users_id))
         );
       });
       setFilteredRecipes(updatedRecipes);
