@@ -48,7 +48,7 @@ export default function CategoryFilter({
                   }
                   className="mr-2"
                 />
-                <label htmlFor={category.category_name} className="text-gray-700">
+                <label htmlFor={category.category_name} className="text-black-700 cursor-pointer">
                   {category.category_name}
                 </label>
               </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 
 interface UserFilterProps {
@@ -9,12 +9,7 @@ interface UserFilterProps {
 export default function UserFilter({ onFilterChange }: UserFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-
-
-
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  //const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleFilterSelect = (filter: string, checked: boolean) => {
     let updatedFilters = [...selectedFilters];
@@ -31,15 +26,35 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
     setSelectedFilters(updatedFilters);
     onFilterChange(updatedFilters);
   };
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+  //       setIsOpen(false);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
+
+  const toggleDropdown = () => {
+    //setIsOpen((prev) => !prev);
+    setIsOpen(!isOpen);
+  };
+
+  //ref={dropdownRef}
   
   return (
-    <div className="relative mt-20">
+    <div className="relative mt-20" >
       <Button onClick={toggleDropdown} size="sm" variant={"default"}>
         Vali enda filter
       </Button>
 
       {isOpen && (
-        <div className="absolute bg-white shadow-lg rounded-lg w-48 p-4 z-10 border">
+        <div className="absolute bg-white shadow-lg rounded-lg w-56 p-4 z-10 border">
           <form>
             <div className="flex items-center mb-4">
               <input
@@ -52,7 +67,7 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
                 }
                 className="mr-2"
               />
-              <label htmlFor="liked" className="text-gray-700">
+              <label htmlFor="liked" className="text-black cursor-pointer">
                 Meeldivad retseptid
               </label>
             </div>
@@ -67,7 +82,7 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
                 }
                 className="mr-2"
               />
-              <label htmlFor="followed" className="text-gray-700">
+              <label htmlFor="followed" className="text-black cursor-pointer">
                 Jälgitavate kasutajate retseptid
               </label>
             </div>
