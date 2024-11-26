@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 
 interface CategoryFilterProps {
-    onFilterChange: (selected: string[]) => void;
+    onCategoryChange: (selected: string[]) => void;
     categories: { category_name: string }[];
   }
 
 export default function CategoryFilter({
-    onFilterChange,
+    onCategoryChange,
     categories,
   }: CategoryFilterProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -25,7 +25,7 @@ export default function CategoryFilter({
     }
 
     setSelectedCategories(updatedCategories);
-    onFilterChange(updatedCategories);
+    onCategoryChange(updatedCategories);
   };
 
   const toggleDropdown = () => {

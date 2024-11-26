@@ -208,18 +208,36 @@ export const getLikedRecipesAction = async (
   return data.map((like) => like.published_recipes_id);
 };
 
-export const getCateories = async ()=> {
+export const getCateories = async () => {
   const supabase = await createClient();
   const { data: categories, error } = await supabase
     .from("categories")
     .select("category_name");
 
   if (error) {
-    console.error("Error kategooriate kättesaamisel")
+    console.error("Error kategooriate kättesaamisel");
     return [];
   }
 
-  console.log(categories)
+  console.log(categories);
 
   return categories;
+};
+
+
+export const getFollowedUsersRecipes = async (userId: number[]): Promise<number[]> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("followings")
+    .select("follower_id")
+    .eq("following_id", userId);
+
+  console.log("getFollowedUsersRecipes", data);
+
+  if (error) {
+    console.error("Error followeride retseptide kättesaamisel:", error);
+    return [];
+  }
+
+  return data ? data.map((item) => item.follower_id) : [];
 };

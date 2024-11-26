@@ -4,30 +4,34 @@ import { RecipeCard } from "@/components/recipes/RecipeCard";
 import { Recipe } from "@/types/Recipe";
 import { useEffect, useState } from "react";
 import { getCateories } from "../actions";
+import UserFilter from "@/components/recipes/UserFilter";
 
 interface RecipeFeedProps {
   recipes: Recipe[];
   likedRecipeId?: number[];
   isLoggedIn: boolean;
+  userId: string;
 }
 
 export default function RecipeFeed({
   recipes,
   isLoggedIn,
   likedRecipeId = [],
+  userId,
 }: RecipeFeedProps) {
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(recipes);
   const [categories, setCategories] = useState<{ category_name: string }[]>([]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       const fetchedCategories = await getCateories();
       setCategories(fetchedCategories);
     };
-    fetchCategories();
+
+    fetchData();
   }, []);
 
-  const handleFilterChange = (selectedCategories: string[]) => {
+  const handleCategoryFilterChange = (selectedCategories: string[]) => {
     if (selectedCategories.length === 0) {
       setFilteredRecipes(recipes);
     } else {
@@ -38,12 +42,32 @@ export default function RecipeFeed({
     }
   };
 
+  const handleUserFilterChange = (selectedFilters: string[]) => {
+    if (selectedFilters.length === 0) {
+      setFilteredRecipes(recipes);
+    } else {
+      const updatedRecipes = recipes.filter((recipe) => {
+        return (
+          (selectedFilters.includes("liked") && likedRecipeId.includes(recipe.id)) ||
+          (selectedFilters.includes("followed") && recipe.users_id === userId)
+        );
+      });
+      setFilteredRecipes(updatedRecipes);
+      console.log("Filtered Recipes:", updatedRecipes);
+    }
+  };
   return (
     <div className="px-4">
       <CategoryFilter
-        onFilterChange={handleFilterChange}
+        onCategoryChange={handleCategoryFilterChange}
         categories={categories}
       />
+      {isLoggedIn && (
+        <UserFilter
+          onFilterChange={handleUserFilterChange}
+          isLoggedIn={isLoggedIn}
+        ></UserFilter>
+      )}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-10">
         {filteredRecipes.map((recipe) => (
           <RecipeCard
