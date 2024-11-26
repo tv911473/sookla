@@ -223,3 +223,68 @@ export const getCateories = async () => {
 
   return categories;
 };
+
+export async function deleteRecipe(recipeId: number): Promise<boolean> {
+  const supabase = await createClient(); 
+  console.log("Supabase client initialized for deletion");
+
+  try {
+    const { data: recipe, error: fetchError } = await supabase
+      .from("published_recipes")
+      .select("ingredients_id")
+      .eq("id", recipeId)
+      .single();
+
+    if (fetchError) {
+      console.error("Error fetching recipe:", fetchError.message);
+      return false;
+    }
+
+    console.log("Fetched recipe data:", recipe);
+
+    const ingredientsId = recipe?.ingredients_id;
+
+    const { error: likesError } = await supabase
+      .from("liked_recipes")
+      .delete()
+      .eq("published_recipes_id", recipeId);
+
+    if (likesError) {
+      console.error("Error deleting likes:", likesError.message);
+      return false;
+    }
+
+    console.log("Successfully deleted likes for recipe ID:", recipeId);
+
+    const { error: recipeError } = await supabase
+      .from("published_recipes")
+      .delete()
+      .eq("id", recipeId);
+
+    if (recipeError) {
+      console.error("Error deleting recipe:", recipeError.message);
+      return false;
+    }
+
+    console.log("Successfully deleted recipe with ID:", recipeId);
+
+    if (ingredientsId) {
+      const { error: ingredientsError } = await supabase
+        .from("ingredients")
+        .delete()
+        .eq("id", ingredientsId);
+
+      if (ingredientsError) {
+        console.error("Error deleting ingredients:", ingredientsError.message);
+        return false;
+      }
+
+      console.log("Successfully deleted ingredients with ID:", ingredientsId);
+    }
+
+    return true;
+  } catch (err) {
+    console.error("Unexpected error during deletion:", err);
+    return false;
+  }
+}
