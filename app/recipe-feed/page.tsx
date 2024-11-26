@@ -4,6 +4,7 @@ import { RecipeCard } from "@/components/recipes/RecipeCard";
 import { Recipe } from "@/types/Recipe";
 import { useEffect, useState } from "react";
 import { getCateories } from "../actions";
+import { deleteRecipe } from "../actions";
 
 interface RecipeFeedProps {
   recipes: Recipe[];
@@ -42,6 +43,24 @@ export default function RecipeFeed({
     }
   };
 
+const handleDelete = async (recipeId: number) => {
+  console.log("Attempting to delete recipe with ID:", recipeId);
+  try {
+    const result = await deleteRecipe(recipeId);
+    if (result) {
+      console.log("Recipe deleted successfully");
+      setFilteredRecipes((prevRecipes) =>
+        prevRecipes.filter((recipe) => recipe.id !== recipeId)
+      );
+    } else {
+      console.error("Failed to delete recipe"); 
+    }
+  } catch (error) {
+    console.error("Error during delete process:", error);
+  }
+};
+
+
   return (
     <div className="px-4">
       <CategoryFilter
@@ -57,6 +76,7 @@ export default function RecipeFeed({
             isInitiallyLiked={likedRecipeId.includes(recipe.id)}
             isUserRecipe={isUserRecipe}
             isUserPage={isUserPage}
+            onDelete={handleDelete}
           />
         ))}
       </ul>

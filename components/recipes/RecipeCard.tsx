@@ -3,6 +3,7 @@ import { getImageUrl } from "@/utils/supabase/utils";
 import Link from "next/link";
 import { LikeButton } from "../ui/like-button";
 import NavigateToUpdateButton from "../ui/update_button";
+import DeleteButton from "../ui/delete-button";
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -10,6 +11,7 @@ interface RecipeCardProps {
   isInitiallyLiked: boolean;
   isUserRecipe?: boolean;
   isUserPage: boolean;
+  onDelete?: (recipeId: number) => void;
 }
 
 export function RecipeCard({
@@ -18,6 +20,7 @@ export function RecipeCard({
   isInitiallyLiked,
   isUserRecipe = false,
   isUserPage,
+  onDelete,
 }: RecipeCardProps) {
   const imageUrl = getImageUrl(recipe.image_url);
 
@@ -64,9 +67,12 @@ export function RecipeCard({
         </div>
       )}
 
-      {isUserRecipe && (
-        <div className="mt-2">
-          <NavigateToUpdateButton recipeId={(recipe.id)} />
+      {isUserRecipe && isLoggedIn && (
+        <div className="flex justify-between mt-4">
+          <NavigateToUpdateButton recipeId={recipe.id} />
+          {onDelete && (
+            <DeleteButton recipeId={recipe.id} onDelete={onDelete} />
+          )}
         </div>
       )}
     </div>
