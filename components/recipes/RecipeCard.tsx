@@ -2,17 +2,25 @@ import { Recipe } from "@/types/Recipe";
 import { getImageUrl } from "@/utils/supabase/utils";
 import Link from "next/link";
 import { LikeButton } from "../ui/like-button";
+import NavigateToUpdateButton from "../ui/update_button";
+import DeleteButton from "../ui/delete-button";
 
 interface RecipeCardProps {
   recipe: Recipe;
   isLoggedIn: boolean;
   isInitiallyLiked: boolean;
+  isUserRecipe?: boolean;
+  isUserPage: boolean;
+  onDelete?: (recipeId: number) => void;
 }
 
 export function RecipeCard({
   recipe,
   isLoggedIn,
   isInitiallyLiked,
+  isUserRecipe = false,
+  isUserPage,
+  onDelete,
 }: RecipeCardProps) {
   const imageUrl = getImageUrl(recipe.image_url);
 
@@ -44,16 +52,27 @@ export function RecipeCard({
         </div>
         <br />
 
-        <div className="flex text-sm text-gray-700 font-light italic">
-          Postitas: {recipe.users_id}
-        </div>
+        {!isUserPage && (
+          <div className="flex text-sm text-gray-700 font-light italic">
+            Postitas: {recipe.users.username}
+          </div>
+        )}
       </div>
-      {isLoggedIn && (
+      {!isUserRecipe && isLoggedIn && (
         <div>
           <LikeButton
             recipeId={recipe.id}
             isInitiallyLiked={isInitiallyLiked}
           />
+        </div>
+      )}
+
+      {isUserRecipe && isLoggedIn && (
+        <div className="flex justify-between mt-4">
+          <NavigateToUpdateButton recipeId={recipe.id} />
+          {onDelete && (
+            <DeleteButton recipeId={recipe.id} onDelete={onDelete} />
+          )}
         </div>
       )}
     </div>

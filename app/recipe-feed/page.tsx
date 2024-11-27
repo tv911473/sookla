@@ -5,12 +5,15 @@ import { Recipe } from "@/types/Recipe";
 import { useEffect, useState } from "react";
 import { getCateories, getFollowedUsersRecipes } from "../actions";
 import UserFilter from "@/components/recipes/UserFilter";
+import { deleteRecipe } from "../actions";
 
 interface RecipeFeedProps {
   recipes: Recipe[];
   likedRecipeId?: number[];
   isLoggedIn: boolean;
   userId: string;
+  isUserRecipe?: boolean;
+  isUserPage?: boolean;
 }
 
 export default function RecipeFeed({
@@ -18,6 +21,8 @@ export default function RecipeFeed({
   isLoggedIn,
   likedRecipeId = [],
   userId,
+  isUserRecipe = false,
+  isUserPage = false,
 }: RecipeFeedProps) {
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(recipes);
   const [categories, setCategories] = useState<{ category_name: string }[]>([]);
@@ -64,6 +69,24 @@ export default function RecipeFeed({
   const handleUserFilterChange = (filters: string[]) => {
     setSelectedUserFilters(filters);
   };
+const handleDelete = async (recipeId: number) => {
+  console.log("Attempting to delete recipe with ID:", recipeId);
+  try {
+    const result = await deleteRecipe(recipeId);
+    if (result) {
+      console.log("Recipe deleted successfully");
+      setFilteredRecipes((prevRecipes) =>
+        prevRecipes.filter((recipe) => recipe.id !== recipeId)
+      );
+    } else {
+      console.error("Failed to delete recipe"); 
+    }
+  } catch (error) {
+    console.error("Error during delete process:", error);
+  }
+};
+
+
   return (
     <div className="px-4">
       <div className="flex flex-row items-center gap-20 mt-10 mb-20">
@@ -94,6 +117,9 @@ export default function RecipeFeed({
             recipe={recipe}
             isLoggedIn={isLoggedIn}
             isInitiallyLiked={likedRecipeId.includes(recipe.id)}
+            isUserRecipe={isUserRecipe}
+            isUserPage={isUserPage}
+            onDelete={handleDelete}
           />
         ))}
       </ul>
