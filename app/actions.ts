@@ -224,6 +224,23 @@ export const getCateories = async () => {
   return categories;
 };
 
+export const getFollowedUsersRecipes = async (userId: string): Promise<string[]> => {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("followings")
+    .select("following_id")
+    .eq("follower_id", userId);
+
+  console.log("Followed Users IDs:", data);
+
+  if (error) {
+    console.error("Error fetching followed users' IDs:", error);
+    return [];
+  }
+
+  return data ? data.map((item) => item.following_id) : [];
+};
+
 export async function deleteRecipe(recipeId: number): Promise<boolean> {
   const supabase = await createClient(); 
   console.log("Supabase client initialized for deletion");
