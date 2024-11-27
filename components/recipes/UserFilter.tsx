@@ -3,7 +3,7 @@ import { Button } from "../ui/button";
 
 interface UserFilterProps {
   onFilterChange: (selected: string[]) => void;
-  isLoggedIn: boolean;
+  isLoggedInFilter: boolean;
 }
 
 export default function UserFilter({ onFilterChange }: UserFilterProps) {
