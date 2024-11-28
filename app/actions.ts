@@ -181,7 +181,8 @@ export const getUserRecipesAction = async (
   let { data: recipes, error } = await supabase
     .from("published_recipes")
     .select(`*, categories(*), ingredients!inner(*)`)
-    .eq("users_id", userId);
+    .eq("users_id", userId)
+    .order("time_of_creation", { ascending: false });
 
   if (error) {
     console.log("Error kasutaja retseptide kätte saamisel");
