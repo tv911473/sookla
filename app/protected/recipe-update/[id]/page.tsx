@@ -18,6 +18,13 @@ type Ingredient = {
   quantity: string;
 };
 
+type ExtendedCropper = ReactCropperElement & {
+  cropper: {
+    ready?: boolean;
+    options?: any;
+  };
+};
+
 export default function UpdateRecipeForm() {
   const supabase = createClient();
   const router = useRouter();
@@ -35,7 +42,8 @@ export default function UpdateRecipeForm() {
   const [image, setImage] = useState<File | null>(null);
   const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
-  const cropperRef = useRef<ReactCropperElement>(null);
+  const cropperRef = useRef<ExtendedCropper>(null);
+  
 
   useEffect(() => {
     const fetchRecipeData = async () => {
@@ -132,6 +140,19 @@ export default function UpdateRecipeForm() {
     fetchCategories();
   }, [id]);
 
+  useEffect(() => {
+    const cropper = cropperRef.current?.cropper;
+    if (cropper) {
+      console.log("Cropper initialized", cropper);
+      console.log("Initial readiness:", cropper.ready);
+
+      cropper.options.ready = () => {
+        console.log("Cropper is ready.");
+      };
+    }
+  }, []);
+
+
   const addIngredientField = () => {
     setIngredients([...ingredients, { name: "", quantity: "" }]);
   };
@@ -160,13 +181,42 @@ export default function UpdateRecipeForm() {
   const getCroppedImageURL = (): Promise<string | null> => {
     return new Promise((resolve) => {
       const cropper = cropperRef.current?.cropper;
-      if (cropper) {
-        resolve(cropper.getCroppedCanvas().toDataURL());
-      } else {
+
+      if (!cropper) {
+        console.warn("Cropper instance is not available.");
         resolve(null);
+        return;
+      }
+
+      if (!cropper.ready) {
+        console.log("Cropper is not ready. Waiting for it to be ready...");
+        const onReady = () => {
+          console.log("Cropper is now ready.");
+          try {
+            const canvas = cropper.getCroppedCanvas();
+            resolve(canvas ? canvas.toDataURL() : null);
+          } catch (error) {
+            console.error("Error generating cropped image URL:", error);
+            resolve(null);
+          }
+        };
+
+        cropper.options.ready = onReady;
+
+        if (cropper.ready) onReady();
+      } else {
+        try {
+          const canvas = cropper.getCroppedCanvas();
+          resolve(canvas ? canvas.toDataURL() : null);
+        } catch (error) {
+          console.error("Error generating cropped image URL:", error);
+          resolve(null);
+        }
       }
     });
   };
+
+
 
   const uploadImage = async (croppedImageURL: string | null) => {
     if (!croppedImageURL) {
@@ -199,20 +249,19 @@ export default function UpdateRecipeForm() {
     if (existingImageUrl) {
       try {
         const { error } = await supabase.storage
-        .from("recipe-images")
-        .remove([existingImageUrl]);
+          .from("recipe-images")
+          .remove([existingImageUrl]);
 
         if (error) {
           console.error("Error deleting existing image:", error.message);
         } else {
-          console.log("Existing image deleted successfully")
+          console.log("Existing image deleted successfully");
         }
       } catch (err) {
         console.error("Error during image deletion:", err);
       }
     }
-  }
-
+  };
   const validateForm = () => {
     const missingFields = [];
     if (!title) missingFields.push("Pealkiri");
@@ -243,12 +292,15 @@ export default function UpdateRecipeForm() {
     let imagePath = existingImageUrl;
 
     if (image) {
-      
       await deleteExistingImage();
-      
+
       const croppedImageURL = await getCroppedImageURL();
-      const uploadedPath = await uploadImage(croppedImageURL);
-      imagePath = uploadedPath || existingImageUrl; 
+      if (croppedImageURL) {
+        const uploadedPath = await uploadImage(croppedImageURL);
+        imagePath = uploadedPath || existingImageUrl;
+      } else {
+        console.warn("No cropped image URL generated.");
+      }
     }
 
     const ingredientText = ingredients
