@@ -79,6 +79,7 @@ export default function RecipeFeed({
       const result = await deleteRecipe(recipeId);
       if (result) {
         console.log("Recipe deleted successfully");
+        window.location.reload();
       } else {
         console.error("Failed to delete recipe");
       }
