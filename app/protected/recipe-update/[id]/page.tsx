@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,13 @@ type Category = {
 type Ingredient = {
   name: string;
   quantity: string;
+};
+
+type ExtendedCropper = ReactCropperElement & {
+  cropper: {
+    ready?: boolean;
+    options?: any;
+  };
 };
 
 export default function UpdateRecipeForm() {
@@ -35,7 +42,7 @@ export default function UpdateRecipeForm() {
   const [image, setImage] = useState<File | null>(null);
   const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
-  const cropperRef = useRef<ReactCropperElement>(null);
+  const cropperRef = useRef<ExtendedCropper>(null);
 
   useEffect(() => {
     const fetchRecipeData = async () => {
@@ -50,14 +57,14 @@ export default function UpdateRecipeForm() {
         return;
       }
 
-      const recipeOwnerId = recipe.users_id; 
+      const recipeOwnerId = recipe.users_id;
 
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
       if (!user || user.id !== recipeOwnerId) {
-        router.push("/protected/user-recipes"); 
+        router.push("/protected/user-recipes");
         return;
       }
 
@@ -68,7 +75,7 @@ export default function UpdateRecipeForm() {
       setStepsDescription(recipe.steps_description);
 
       if (recipe.image_url) {
-        setExistingImageUrl(recipe.image_url); 
+        setExistingImageUrl(recipe.image_url);
       }
 
       const ingredientIds = recipe.ingredients_id;
@@ -132,6 +139,18 @@ export default function UpdateRecipeForm() {
     fetchCategories();
   }, [id]);
 
+  useEffect(() => {
+    const cropper = cropperRef.current?.cropper;
+    if (cropper) {
+      console.log("Cropper initialized", cropper);
+      console.log("Initial readiness:", cropper.ready);
+
+      cropper.options.ready = () => {
+        console.log("Cropper is ready.");
+      };
+    }
+  }, []);
+
   const addIngredientField = () => {
     setIngredients([...ingredients, { name: "", quantity: "" }]);
   };
@@ -160,10 +179,37 @@ export default function UpdateRecipeForm() {
   const getCroppedImageURL = (): Promise<string | null> => {
     return new Promise((resolve) => {
       const cropper = cropperRef.current?.cropper;
-      if (cropper) {
-        resolve(cropper.getCroppedCanvas().toDataURL());
-      } else {
+
+      if (!cropper) {
+        console.warn("Cropper instance is not available.");
         resolve(null);
+        return;
+      }
+
+      if (!cropper.ready) {
+        console.log("Cropper is not ready. Waiting for it to be ready...");
+        const onReady = () => {
+          console.log("Cropper is now ready.");
+          try {
+            const canvas = cropper.getCroppedCanvas();
+            resolve(canvas ? canvas.toDataURL() : null);
+          } catch (error) {
+            console.error("Error generating cropped image URL:", error);
+            resolve(null);
+          }
+        };
+
+        cropper.options.ready = onReady;
+
+        if (cropper.ready) onReady();
+      } else {
+        try {
+          const canvas = cropper.getCroppedCanvas();
+          resolve(canvas ? canvas.toDataURL() : null);
+        } catch (error) {
+          console.error("Error generating cropped image URL:", error);
+          resolve(null);
+        }
       }
     });
   };
@@ -199,20 +245,19 @@ export default function UpdateRecipeForm() {
     if (existingImageUrl) {
       try {
         const { error } = await supabase.storage
-        .from("recipe-images")
-        .remove([existingImageUrl]);
+          .from("recipe-images")
+          .remove([existingImageUrl]);
 
         if (error) {
           console.error("Error deleting existing image:", error.message);
         } else {
-          console.log("Existing image deleted successfully")
+          console.log("Existing image deleted successfully");
         }
       } catch (err) {
         console.error("Error during image deletion:", err);
       }
     }
-  }
-
+  };
   const validateForm = () => {
     const missingFields = [];
     if (!title) missingFields.push("Pealkiri");
@@ -243,12 +288,15 @@ export default function UpdateRecipeForm() {
     let imagePath = existingImageUrl;
 
     if (image) {
-      
       await deleteExistingImage();
-      
+
       const croppedImageURL = await getCroppedImageURL();
-      const uploadedPath = await uploadImage(croppedImageURL);
-      imagePath = uploadedPath || existingImageUrl; 
+      if (croppedImageURL) {
+        const uploadedPath = await uploadImage(croppedImageURL);
+        imagePath = uploadedPath || existingImageUrl;
+      } else {
+        console.warn("No cropped image URL generated.");
+      }
     }
 
     const ingredientText = ingredients
@@ -303,6 +351,27 @@ export default function UpdateRecipeForm() {
 
     router.push("/protected/user-recipes");
   };
+
+  const cropperElement = useMemo(() => {
+    return image ? (
+      <Cropper
+        src={URL.createObjectURL(image)}
+        ref={cropperRef}
+        aspectRatio={1}
+        guides={false}
+        style={{
+          height: "400px",
+          width: "100%",
+          maxWidth: "400px",
+          borderRadius: "8px",
+        }}
+        initialAspectRatio={1}
+        viewMode={1}
+        minContainerWidth={400}
+        minContainerHeight={400}
+      />
+    ) : null;
+  }, [image]);
 
   return (
     <div className="max-w-screen-2xl mx-auto p-4">
@@ -490,28 +559,7 @@ export default function UpdateRecipeForm() {
           />
         </div>
 
-        {image && (
-          <div className="my-4">
-            <Cropper
-              src={URL.createObjectURL(image)}
-              style={{
-                height: "auto",
-                width: "100%",
-                maxWidth: "400px",
-                maxHeight: "400px",
-                borderRadius: "8px",
-              }}
-              initialAspectRatio={1}
-              aspectRatio={1}
-              guides={false}
-              ref={cropperRef}
-              viewMode={1}
-              minContainerWidth={400}
-              minContainerHeight={400}
-            />
-          </div>
-        )}
-
+        <div className="my-4">{cropperElement}</div>
         <button
           type="submit"
           className="w-full py-3 mt-4 font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none"
