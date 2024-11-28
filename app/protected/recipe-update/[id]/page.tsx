@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -43,7 +43,6 @@ export default function UpdateRecipeForm() {
   const [existingImageUrl, setExistingImageUrl] = useState<string | null>(null);
   const [errors, setErrors] = useState<string[]>([]);
   const cropperRef = useRef<ExtendedCropper>(null);
-  
 
   useEffect(() => {
     const fetchRecipeData = async () => {
@@ -58,14 +57,14 @@ export default function UpdateRecipeForm() {
         return;
       }
 
-      const recipeOwnerId = recipe.users_id; 
+      const recipeOwnerId = recipe.users_id;
 
       const {
         data: { user },
       } = await supabase.auth.getUser();
 
       if (!user || user.id !== recipeOwnerId) {
-        router.push("/protected/user-recipes"); 
+        router.push("/protected/user-recipes");
         return;
       }
 
@@ -76,7 +75,7 @@ export default function UpdateRecipeForm() {
       setStepsDescription(recipe.steps_description);
 
       if (recipe.image_url) {
-        setExistingImageUrl(recipe.image_url); 
+        setExistingImageUrl(recipe.image_url);
       }
 
       const ingredientIds = recipe.ingredients_id;
@@ -152,7 +151,6 @@ export default function UpdateRecipeForm() {
     }
   }, []);
 
-
   const addIngredientField = () => {
     setIngredients([...ingredients, { name: "", quantity: "" }]);
   };
@@ -215,8 +213,6 @@ export default function UpdateRecipeForm() {
       }
     });
   };
-
-
 
   const uploadImage = async (croppedImageURL: string | null) => {
     if (!croppedImageURL) {
@@ -355,6 +351,27 @@ export default function UpdateRecipeForm() {
 
     router.push("/protected/user-recipes");
   };
+
+  const cropperElement = useMemo(() => {
+    return image ? (
+      <Cropper
+        src={URL.createObjectURL(image)}
+        ref={cropperRef}
+        aspectRatio={1}
+        guides={false}
+        style={{
+          height: "400px",
+          width: "100%",
+          maxWidth: "400px",
+          borderRadius: "8px",
+        }}
+        initialAspectRatio={1}
+        viewMode={1}
+        minContainerWidth={400}
+        minContainerHeight={400}
+      />
+    ) : null;
+  }, [image]);
 
   return (
     <div className="max-w-screen-2xl mx-auto p-4">
@@ -542,28 +559,7 @@ export default function UpdateRecipeForm() {
           />
         </div>
 
-        {image && (
-          <div className="my-4">
-            <Cropper
-              src={URL.createObjectURL(image)}
-              style={{
-                height: "auto",
-                width: "100%",
-                maxWidth: "400px",
-                maxHeight: "400px",
-                borderRadius: "8px",
-              }}
-              initialAspectRatio={1}
-              aspectRatio={1}
-              guides={false}
-              ref={cropperRef}
-              viewMode={1}
-              minContainerWidth={400}
-              minContainerHeight={400}
-            />
-          </div>
-        )}
-
+        <div className="my-4">{cropperElement}</div>
         <button
           type="submit"
           className="w-full py-3 mt-4 font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none"
