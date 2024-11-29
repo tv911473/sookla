@@ -24,11 +24,11 @@ export default async function UserAccountPage() {
     return <p>Kasutaja andmeid ei leitud.</p>;
   }
 
-  const formattedDate = new Date(user.created_at).toLocaleDateString("en-GB");
+  // const formattedDate = new Date(user.created_at).toLocaleDateString("en-GB");
   const username = userData.username || "Kasutajanimi pole määratud";
 
   return (
-    <div className="flex flex-col items-center p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-6">
+    <div className="flex flex-col items-center p-6 max-w-md w-full mx-auto bg-white rounded-xl shadow-md space-y-6 m-16">
       {/* profiilipilt kui tahame lisada siis on koht olemas */}
       <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
         <img
@@ -54,25 +54,25 @@ export default async function UserAccountPage() {
           <p className="text-sm text-gray-500">E-mail:</p>
           <p className="text-lg font-medium">{user.email}</p>
         </div>
-        <div>
+        {/* <div>
           <p className="text-sm text-gray-500">Kasutaja ID:</p>
           <p className="text-lg font-medium">{user.id}</p>
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           <p className="text-sm text-gray-500">Kasutaja alates:</p>
           <p className="text-lg font-medium">{formattedDate}</p>
-        </div>
+        </div> */}
 
         {/* muuda parooli nupp */}
         <ChangePasswordButton email={user.email as string} />
       </div>
 
       {/* retseptide osa kui tahame lisada, tegin lihtsalt figma järgi */}
-      <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
+      {/* <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
         <p className="text-lg font-medium">
           Loodud retseptid ja nende statistika
         </p>
-      </div>
+      </div> */}
     </div>
   );
 }

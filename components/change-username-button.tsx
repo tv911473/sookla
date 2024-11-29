@@ -45,7 +45,7 @@ const ChangeUsernameButton = ({
   };
 
   return (
-    <div>
+    <div className="text-center space-y-4">
       <div className="mb-4">
         <p className="text-2xl font-bold">
           {isEditing ? (
