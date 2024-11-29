@@ -28,51 +28,53 @@ export default async function UserAccountPage() {
   const username = userData.username || "Kasutajanimi pole määratud";
 
   return (
-    <div className="flex flex-col items-center p-6 max-w-md w-full mx-auto bg-white rounded-xl shadow-md space-y-6 m-16">
-      {/* profiilipilt kui tahame lisada siis on koht olemas */}
-      <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
-        <img
-          src="path/to/profile-picture"
-          alt="Konto Profiilipilt"
-          className="w-full h-full object-cover rounded-full"
+    <div className=" min-h-screen">
+      <div className="flex flex-col items-center p-6 max-w-md w-full mx-auto bg-white rounded-xl shadow-md space-y-6 m-16">
+        {/* profiilipilt kui tahame lisada siis on koht olemas */}
+        <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
+          <img
+            src="path/to/profile-picture"
+            alt="Konto Profiilipilt"
+            className="w-full h-full object-cover rounded-full"
+          />
+        </div>
+
+        {/* Muuda kasutajanime */}
+        <ChangeUsernameButton
+          email={user.email as string}
+          initialUsername={username}
         />
-      </div>
 
-      {/* Muuda kasutajanime */}
-      <ChangeUsernameButton
-        email={user.email as string}
-        initialUsername={username}
-      />
-
-      {/* Konto info */}
-      <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
-        <div>
-          <p className="text-sm text-gray-500">Kasutajanimi:</p>
-          <p className="text-lg font-medium">{username}</p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-500">E-mail:</p>
-          <p className="text-lg font-medium">{user.email}</p>
-        </div>
-        {/* <div>
+        {/* Konto info */}
+        <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
+          <div>
+            <p className="text-sm text-gray-500">Kasutajanimi:</p>
+            <p className="text-lg font-medium">{username}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">E-mail:</p>
+            <p className="text-lg font-medium">{user.email}</p>
+          </div>
+          {/* <div>
           <p className="text-sm text-gray-500">Kasutaja ID:</p>
           <p className="text-lg font-medium">{user.id}</p>
         </div> */}
-        {/* <div>
+          {/* <div>
           <p className="text-sm text-gray-500">Kasutaja alates:</p>
           <p className="text-lg font-medium">{formattedDate}</p>
         </div> */}
 
-        {/* muuda parooli nupp */}
-        <ChangePasswordButton email={user.email as string} />
-      </div>
+          {/* muuda parooli nupp */}
+          <ChangePasswordButton email={user.email as string} />
+        </div>
 
-      {/* retseptide osa kui tahame lisada, tegin lihtsalt figma järgi */}
-      {/* <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
+        {/* retseptide osa kui tahame lisada, tegin lihtsalt figma järgi */}
+        {/* <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
         <p className="text-lg font-medium">
           Loodud retseptid ja nende statistika
         </p>
       </div> */}
+      </div>
     </div>
   );
 }
