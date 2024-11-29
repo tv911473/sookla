@@ -13,7 +13,7 @@ export default async function UserAccountPage() {
     return <p>Sa pead olema sisse logitud et näha seda lehte.</p>;
   }
 
-  // Fetch user data from the public.users table to get the username
+  // username saamise query
   const { data: userData, error } = await supabase
     .from("users")
     .select("username")
@@ -24,7 +24,7 @@ export default async function UserAccountPage() {
     return <p>Kasutaja andmeid ei leitud.</p>;
   }
 
-  // const formattedDate = new Date(user.created_at).toLocaleDateString("en-GB");
+  const formattedDate = new Date(user.created_at).toLocaleDateString("en-GB");
   const username = userData.username || "Kasutajanimi pole määratud";
 
   return (
@@ -54,25 +54,14 @@ export default async function UserAccountPage() {
           <p className="text-sm text-gray-500">E-mail:</p>
           <p className="text-lg font-medium">{user.email}</p>
         </div>
-        {/* <div>
-          <p className="text-sm text-gray-500">Kasutaja ID:</p>
-          <p className="text-lg font-medium">{user.id}</p>
-        </div> */}
-        {/* <div>
+        <div>
           <p className="text-sm text-gray-500">Kasutaja alates:</p>
           <p className="text-lg font-medium">{formattedDate}</p>
-        </div> */}
+        </div>
 
         {/* muuda parooli nupp */}
         <ChangePasswordButton email={user.email as string} />
       </div>
-
-      {/* retseptide osa kui tahame lisada, tegin lihtsalt figma järgi */}
-      {/* <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
-        <p className="text-lg font-medium">
-          Loodud retseptid ja nende statistika
-        </p>
-      </div> */}
     </div>
   );
 }

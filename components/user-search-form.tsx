@@ -5,25 +5,32 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 const SearchUserButton = ({ users }: { users: any[] }) => {
-  const [uid, setUid] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  // UID search kui tahad ise otsida
+  // search username kaudu
   const handleSearch = () => {
-    if (!uid) {
-      setError("Palun sisestage UID.");
+    if (!username.trim()) {
+      setError("Palun sisestage kasutajanimi.");
+      return;
+    }
+
+    const foundUser = users.find(
+      (user) => user.username?.toLowerCase() === username.toLowerCase()
+    );
+
+    if (!foundUser) {
+      setError("Kasutajat ei leitud.");
       return;
     }
 
     setError(""); // reset error
-    router.push(`/protected/user-profile/${uid}`); // route user-profile
+    router.push(`/protected/user-profile/${foundUser.id}`); // navigeerimine searchist
   };
 
-  // search kui klikid listis kellegi peal
   const handleClickUser = (id: string) => {
-    setUid(id); // UID laheb searchboxi ja kohe searchib
-    router.push(`/protected/user-profile/${id}`); // Navigate directly to the user profile page
+    router.push(`/protected/user-profile/${id}`); // navigeerimine listist
   };
 
   return (
@@ -36,7 +43,7 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
             <li
               key={userItem.id}
               className="text-lg text-blue-500 cursor-pointer hover:underline"
-              onClick={() => handleClickUser(userItem.id)} // klikkad siis otsib
+              onClick={() => handleClickUser(userItem.id)}
             >
               {userItem.username || "Kasutajanimi pole määratud"}
             </li>
@@ -44,12 +51,12 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
         </ul>
       </div>
 
-      {/* UID searchbox */}
+      {/* Username searchbox */}
       <input
         type="text"
-        placeholder="Sisesta UID"
-        value={uid}
-        onChange={(e) => setUid(e.target.value)}
+        placeholder="Sisesta kasutajanimi"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
         className="w-full p-2 border border-gray-300 rounded-md"
       />
 
