@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 const SearchUserButton = ({ users }: { users: any[] }) => {
   const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
   // search username kaudu
@@ -26,30 +27,43 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
     }
 
     setError(""); // reset error
-    router.push(`/protected/user-profile/${foundUser.id}`); // navigeerimine searchist
+    router.push(`/protected/user-profile/${foundUser.id}`);
   };
 
-  const handleClickUser = (id: string) => {
-    router.push(`/protected/user-profile/${id}`); // navigeerimine listist
+  // dropdownist kasutaja valimine
+  const handleSelectUser = (user: any) => {
+    setUsername(user.username);
+    setDropdownOpen(false);
+    router.push(`/protected/user-profile/${user.id}`);
   };
 
   return (
-    <div className="mb-4">
-      {/* Kasutajate list */}
+    <div className="mb-4 relative">
+      {/* Kasutajate dropdown */}
       <div className="mb-4">
         <h3 className="text-xl font-semibold">Kasutajad:</h3>
-        <ul>
-          {users.map((userItem) => (
+        <button
+          onClick={() => setDropdownOpen(!isDropdownOpen)}
+          className="w-full p-2 text-left border border-gray-300 rounded-md bg-white hover:bg-gray-100"
+        >
+          {username || "Vali kasutaja"}{" "}
+        </button>
+      </div>
+
+      {/* Dropdown list */}
+      {isDropdownOpen && (
+        <ul className="absolute z-10 bg-white border border-gray-300 rounded-md w-full shadow-lg max-h-40 overflow-auto">
+          {users.map((user) => (
             <li
-              key={userItem.id}
-              className="text-lg text-blue-500 cursor-pointer hover:underline"
-              onClick={() => handleClickUser(userItem.id)}
+              key={user.id}
+              onClick={() => handleSelectUser(user)}
+              className="p-2 hover:bg-gray-100 cursor-pointer"
             >
-              {userItem.username || "Kasutajanimi pole määratud"}
+              {user.username || "Kasutajanimi pole määratud"}
             </li>
           ))}
         </ul>
-      </div>
+      )}
 
       {/* Username searchbox */}
       <input
@@ -57,7 +71,7 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
         placeholder="Sisesta kasutajanimi"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded-md"
+        className="w-full p-2 border border-gray-300 rounded-md mt-4"
       />
 
       {/* errorid jah */}
