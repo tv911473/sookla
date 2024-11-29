@@ -52,7 +52,7 @@ export default async function UserProfilePage({
 
   return (
     <div className="min-h-screen">
-      <div className="flex flex-col items-center p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-6  m-16">
+      <div className="flex flex-col items-center p-6 max-w-md mx-auto bg-red-100 rounded-xl shadow-md space-y-6 m-16">
         {/* Profiilipilt */}
         <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
           <img
