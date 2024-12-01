@@ -249,7 +249,7 @@ export async function deleteRecipe(recipeId: number): Promise<boolean> {
   try {
     const { data: recipe, error: fetchError } = await supabase
       .from("published_recipes")
-      .select("ingredients_id")
+      .select("ingredients_id, image_url")
       .eq("id", recipeId)
       .single();
 
@@ -261,6 +261,7 @@ export async function deleteRecipe(recipeId: number): Promise<boolean> {
     console.log("Fetched recipe data:", recipe);
 
     const ingredientsId = recipe?.ingredients_id;
+    const imagePath = recipe?.image_url; 
 
     const { error: likesError } = await supabase
       .from("liked_recipes")
@@ -298,6 +299,22 @@ export async function deleteRecipe(recipeId: number): Promise<boolean> {
       }
 
       console.log("Successfully deleted ingredients with ID:", ingredientsId);
+    }
+
+    if (imagePath) {
+      const { error: storageError } = await supabase.storage
+        .from("recipe-images") 
+        .remove([imagePath]);
+
+      if (storageError) {
+        console.error(
+          "Error deleting image from storage:",
+          storageError.message
+        );
+        return false;
+      }
+
+      console.log("Successfully deleted image from storage:", imagePath);
     }
 
     return true;
