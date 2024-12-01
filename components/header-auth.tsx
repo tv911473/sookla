@@ -42,22 +42,35 @@ export default async function AuthButton() {
   return user ? (
     <>
       <div className="flex items-center gap-2">
-        <Button size="sm" variant={"default"}>
-          <Link href="/protected/recipe-form">Lisa retsept</Link>
-        </Button>
-        <Button size="sm" variant={"default"}>
-          <Link href="/protected/user-recipes">Minu retseptid</Link>
-        </Button>
-        <Button size="sm" variant={"default"}>
-          <Link href="/protected/user-account">Konto</Link>
-        </Button>
-        <Button size="sm" variant={"default"}>
-          <Link href="/protected/search">Otsi kasutajaid</Link>
-        </Button>
+        <Link href="/protected/recipe-form">
+          <Button size="sm" variant={"default"}>
+            Lisa retsept
+          </Button>
+        </Link>
+        <Link href="/protected/user-recipes">
+          <Button size="sm" variant={"default"}>
+            Minu retseptid
+          </Button>
+        </Link>
+        <Link href="/protected/user-account">
+          <Button size="sm" variant={"default"}>
+            Konto
+          </Button>
+        </Link>
+        <Link href="/protected/search">
+          <Button size="sm" variant={"default"}>
+            Otsi kasutajaid
+          </Button>
+        </Link>
       </div>
       <div className="flex items-center gap-2">
         <form action={signOutAction}>
-          <Button type="submit" size="sm" variant={"outline"} className="bg-pink-50 hover:bg-red-200 border-0 border-black">
+          <Button
+            type="submit"
+            size="sm"
+            variant={"outline"}
+            className="bg-pink-50 hover:bg-red-200 border-0 border-black"
+          >
             Logi välja
           </Button>
         </form>
