@@ -7,6 +7,7 @@ import { Cropper, ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { Alert } from "flowbite-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 type Category = {
   id: number;
@@ -288,22 +289,25 @@ export default function RecipeForm() {
                 }
                 className="flex-1 p-2 border rounded-md"
               />
-              <button
+              <Button
                 type="button"
                 onClick={() => removeIngredientField(index)}
-                className="p-2 font-semibold text-white text-sm bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none"
+                variant={"default"}
+                size="sm"
               >
                 Eemalda
-              </button>
+              </Button>
             </div>
           ))}
-          <button
+          <Button
             type="button"
             onClick={addIngredientField}
-            className="w-full py-2 px-2 font-semibold text-white text-sm bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none"
+            variant={"default"}
+            size="sm"
+            className="w-full"
           >
             Lisa koostisosa
-          </button>
+          </Button>
         </div>
 
         <div className="space-y-2">
@@ -423,12 +427,14 @@ export default function RecipeForm() {
           </div>
         )}
 
-        <button
+        <Button
           type="submit"
-          className="w-full py-3 mt-4 font-semibold text-white bg-red-600 rounded-lg hover:bg-red-700 focus:outline-none"
+          variant={"default"}
+          size="sm"
+          className="w-full py-5 mt-4"
         >
           Postita
-        </button>
+        </Button>
       </form>
     </div>
   );
