@@ -29,7 +29,7 @@ const FollowersList = ({ followers }: FollowersListProps) => {
   };
 
   return (
-    <div className="w-full bg-white p-4 rounded-lg shadow-inner mt-6">
+    <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
       <h3 className="text-lg font-bold mb-4">Jälgijad</h3>
       <div className="flex items-center space-x-2">
         <p
@@ -50,7 +50,7 @@ const FollowersList = ({ followers }: FollowersListProps) => {
           {followers.map((follower) => (
             <li
               key={follower.follower_id}
-              className="text-sm font-medium cursor-pointer text-blue-500 hover:underline"
+              className="text-sm font-medium cursor-pointer text-red-500 hover:underline"
               onClick={() => handleClickUser(follower.follower_id)}
             >
               {follower.users?.username || "Anonüümne kasutaja"}

@@ -8,7 +8,7 @@ const BackButton = () => {
   return (
     <button
       onClick={() => router.back()}
-      className="text-blue-500 hover:underline"
+      className="text-red-500 hover:underline"
     >
       &larr; Tagasi
     </button>

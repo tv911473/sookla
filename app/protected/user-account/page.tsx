@@ -3,6 +3,9 @@ import ChangePasswordButton from "@/components/change-password-button";
 import ChangeUsernameButton from "@/components/change-username-button";
 import FollowersList from "@/components/followers-list";
 
+const default_avatar =
+  "https://emetryzjnikmcwiqgjtv.supabase.co/storage/v1/object/public/recipe-images/recipe-images/avatar.png";
+
 export default async function UserAccountPage() {
   const supabase = await createClient();
 
@@ -40,10 +43,10 @@ export default async function UserAccountPage() {
   const followers = followersData as FollowerData[] | null;
   return (
     <div className="min-h-screen">
-      <div className="flex flex-col items-center p-6 max-w-md w-full mx-auto bg-red-100 rounded-xl shadow-md space-y-6 m-16">
+      <div className="flex flex-col items-center p-6 max-w-md w-full mx-auto bg-white rounded-xl shadow-md space-y-6 m-16">
         <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
           <img
-            src="path/to/profile-picture"
+            src={default_avatar}
             alt="Konto Profiilipilt"
             className="w-full h-full object-cover rounded-full"
           />
@@ -52,7 +55,7 @@ export default async function UserAccountPage() {
           email={user.email as string}
           initialUsername={username}
         />
-        <div className="w-full bg-white p-4 rounded-lg shadow-inner space-y-4">
+        <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
           <div>
             <p className="text-sm text-gray-500">Kasutajanimi:</p>
             <p className="text-lg font-medium">{username}</p>

@@ -27,7 +27,7 @@ export function RecipeCard({
   return (
     <div
       key={recipe.id}
-      className="flex flex-col justify-between p-4 mb-4 bg-red-100 border rounded-lg shadow-m hover:shadow-lg transition-shadow"
+      className="flex flex-col justify-between p-4 mb-4 bg-white border rounded-lg shadow-m hover:shadow-lg transition-shadow"
     >
       <Link className="flex flex-col" href={`/recipes/${recipe.id}`}>
         <img

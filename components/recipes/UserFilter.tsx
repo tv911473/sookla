@@ -31,7 +31,7 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
 
   return (
     <div className="relative">
-      <Button onClick={toggleDropdown} size="sm" variant={"default"}>
+      <Button onClick={toggleDropdown} size="sm" variant={"filterb"}>
         Vali enda filter
       </Button>
 

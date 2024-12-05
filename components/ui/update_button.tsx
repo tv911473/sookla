@@ -10,7 +10,7 @@ const NavigateToUpdateButton = ({ recipeId }: { recipeId: number }) => {
   };
 
   return (
-    <Button onClick={handleNavigation} variant={"default"} size="sm">
+    <Button onClick={handleNavigation} variant={"etc"} size="sm">
       Uuenda
     </Button>
   );
