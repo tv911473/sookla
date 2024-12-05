@@ -62,7 +62,7 @@ export const signInAction = async (formData: FormData) => {
   });
 
   if (error) {
-    return encodedRedirect("error", "/sign-in", error.message);
+    return encodedRedirect("error", "/sign-in", "Vale e-mail või parool!");
   }
 
   return redirect("/protected");
@@ -225,7 +225,9 @@ export const getCateories = async () => {
   return categories;
 };
 
-export const getFollowedUsersRecipes = async (userId: string): Promise<string[]> => {
+export const getFollowedUsersRecipes = async (
+  userId: string
+): Promise<string[]> => {
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("followings")
@@ -243,13 +245,13 @@ export const getFollowedUsersRecipes = async (userId: string): Promise<string[]>
 };
 
 export async function deleteRecipe(recipeId: number): Promise<boolean> {
-  const supabase = await createClient(); 
+  const supabase = await createClient();
   console.log("Supabase client initialized for deletion");
 
   try {
     const { data: recipe, error: fetchError } = await supabase
       .from("published_recipes")
-      .select("ingredients_id")
+      .select("ingredients_id, image_url")
       .eq("id", recipeId)
       .single();
 
@@ -261,6 +263,7 @@ export async function deleteRecipe(recipeId: number): Promise<boolean> {
     console.log("Fetched recipe data:", recipe);
 
     const ingredientsId = recipe?.ingredients_id;
+    const imagePath = recipe?.image_url;
 
     const { error: likesError } = await supabase
       .from("liked_recipes")
@@ -298,6 +301,22 @@ export async function deleteRecipe(recipeId: number): Promise<boolean> {
       }
 
       console.log("Successfully deleted ingredients with ID:", ingredientsId);
+    }
+
+    if (imagePath) {
+      const { error: storageError } = await supabase.storage
+        .from("recipe-images")
+        .remove([imagePath]);
+
+      if (storageError) {
+        console.error(
+          "Error deleting image from storage:",
+          storageError.message
+        );
+        return false;
+      }
+
+      console.log("Successfully deleted image from storage:", imagePath);
     }
 
     return true;
