@@ -24,7 +24,6 @@ const FollowersList = ({ followers }: FollowersListProps) => {
 
   const hasFollowers = followers && followers.length > 0;
 
-  // navigeerib followeri lehele
   const handleClickUser = (id: string) => {
     router.push(`/protected/user-profile/${id}`);
   };
@@ -33,7 +32,6 @@ const FollowersList = ({ followers }: FollowersListProps) => {
     <div className="w-full bg-white p-4 rounded-lg shadow-inner mt-6">
       <h3 className="text-lg font-bold mb-4">Jälgijad</h3>
       <div className="flex items-center space-x-2">
-        {/* toggle kas naha followere */}
         <p
           className="text-lg font-medium cursor-pointer"
           onClick={toggleFollowers}
@@ -47,8 +45,6 @@ const FollowersList = ({ followers }: FollowersListProps) => {
           )}
         </p>
       </div>
-
-      {/* Kui klikid siis naitab followere */}
       {isFollowersVisible && hasFollowers && (
         <ul className="space-y-2 mt-4">
           {followers.map((follower) => (

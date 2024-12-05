@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "../ui/button";
 
 interface UserFilterProps {
@@ -9,7 +9,6 @@ interface UserFilterProps {
 export default function UserFilter({ onFilterChange }: UserFilterProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-  //const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleFilterSelect = (filter: string, checked: boolean) => {
     let updatedFilters = [...selectedFilters];
@@ -27,28 +26,12 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
     onFilterChange(updatedFilters);
   };
 
-  // useEffect(() => {
-  //   const handleClickOutside = (event: MouseEvent) => {
-  //     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-  //       setIsOpen(false);
-  //     }
-  //   };
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
-
   const toggleDropdown = () => {
-    //setIsOpen((prev) => !prev);
     setIsOpen(!isOpen);
   };
 
-  //ref={dropdownRef}
-  
   return (
-    <div className="relative" >
+    <div className="relative">
       <Button onClick={toggleDropdown} size="sm" variant={"default"}>
         Vali enda filter
       </Button>
@@ -67,7 +50,10 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
                 }
                 className="mr-2 accent-red-600"
               />
-              <label htmlFor="liked" className="text-red-500 cursor-pointer hover:text-red-700">
+              <label
+                htmlFor="liked"
+                className="text-red-500 cursor-pointer hover:text-red-700"
+              >
                 Meeldivad retseptid
               </label>
             </div>
@@ -82,7 +68,10 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
                 }
                 className="mr-2 accent-red-600"
               />
-              <label htmlFor="followed" className="text-red-500 cursor-pointer hover:text-red-700">
+              <label
+                htmlFor="followed"
+                className="text-red-500 cursor-pointer hover:text-red-700"
+              >
                 Jälgitavate kasutajate retseptid
               </label>
             </div>

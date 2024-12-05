@@ -1,6 +1,5 @@
 import { EnvVarWarning } from "@/components/env-var-warning";
 import HeaderAuth from "@/components/header-auth";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { GeistSans } from "geist/font/sans";
 import { ThemeProvider } from "next-themes";
@@ -19,11 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className} style={{ scrollbarGutter: "stable", overflow: "scroll"}}suppressHydrationWarning>
+    <html
+      lang="en"
+      className={GeistSans.className}
+      style={{ scrollbarGutter: "stable", overflow: "scroll" }}
+      suppressHydrationWarning
+    >
       <body className="bg-background text-foreground bg-pink-50">
         <ThemeProvider
           attribute="class"
-          // defaultTheme="system"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
@@ -59,7 +62,6 @@ export default function RootLayout({
                 <Link href="/about-us" className="text-base hover:underline">
                   Meist
                 </Link>
-                {/* <ThemeSwitcher /> */}
               </footer>
             </div>
           </main>

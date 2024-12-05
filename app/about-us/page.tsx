@@ -1,8 +1,8 @@
 export default async function AboutUs() {
   return (
     <>
-      <main className="flex-1 flex flex-col gap-6 px-4">
-        <div className="flex flex-col gap-2 items-center">
+      <main className="flex-1 flex flex-col gap-6 px-4 mt-20">
+        <div className="flex flex-col gap-2 items-center min-h-screen">
           <h2 className="font-medium text-xl mb-6">ABOUT US</h2>
           <div className="flex items-center w-3/5 text-center">
             <p>
