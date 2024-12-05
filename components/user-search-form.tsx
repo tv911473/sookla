@@ -70,7 +70,9 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
       />
       {error && <p className="text-red-500">{error}</p>}
       <div className="mt-4">
-        <Button onClick={handleSearch}>Otsi Kasutajat</Button>
+        <Button variant={"filterb"} onClick={handleSearch}>
+          Otsi Kasutajat
+        </Button>
       </div>
     </div>
   );

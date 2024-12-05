@@ -105,7 +105,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({
       size="sm"
       className={cn(
         "flex items-center justify-center transition-colors",
-        followed ? "bg-blue-500 text-white" : "bg-white text-blue-500",
+        followed ? "bg-custom-grey text-white" : "bg-custom-yellow text-black",
         className
       )}
       onClick={toggleFollow}

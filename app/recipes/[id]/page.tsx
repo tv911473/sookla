@@ -13,7 +13,7 @@ export default async function SingleRecipe({ params }: SingleRecipeProps) {
   const recipe = await getSingleRecipe(id);
 
   if (!recipe) {
-    return <div>Recipe not found</div>;
+    return <div>Retsepti ei leitud!</div>;
   }
 
   return (

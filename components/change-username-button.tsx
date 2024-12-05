@@ -66,7 +66,7 @@ const ChangeUsernameButton = ({
         <Button
           onClick={() => setIsEditing((prev) => !prev)}
           size="default"
-          variant="secondary"
+          variant="filterb"
           className="w-full"
         >
           {isEditing ? "Tühista" : "Muuda kasutajanime"}

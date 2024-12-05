@@ -8,7 +8,7 @@ export function BigRecipeCard({ recipe }: { recipe: Recipe }) {
   return (
     <div
       key={recipe.id}
-      className="p-12 mb-12 border shadow-xl bg-red-100 rounded-lg w-full mx-auto"
+      className="p-12 mb-12 border shadow-xl bg-white rounded-lg w-full mx-auto"
     >
       <div className="flex flex-row justify-between">
         <div className="flex flex-col justify-start mr-10">

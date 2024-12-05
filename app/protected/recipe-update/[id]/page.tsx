@@ -388,7 +388,7 @@ export default function UpdateRecipeForm() {
       )}
       <form
         onSubmit={updateRecipe}
-        className="p-12 mb-12 mt-10 border shadow-xl bg-red-100 rounded-lg w-[750px] mx-auto"
+        className="p-12 mb-12 mt-10 border shadow-xl bg-white rounded-lg w-[750px] mx-auto"
       >
         <div className="space-y-2">
           <Label
@@ -444,7 +444,7 @@ export default function UpdateRecipeForm() {
           <Button
             type="button"
             onClick={addIngredientField}
-            variant={"default"}
+            variant={"filterb"}
             size="sm"
             className="w-full"
           >
@@ -566,7 +566,7 @@ export default function UpdateRecipeForm() {
         <div className="my-4">{cropperElement}</div>
         <Button
           type="submit"
-          variant={"default"}
+          variant={"filterb"}
           size="sm"
           className="w-full py-5 mt-4"
         >

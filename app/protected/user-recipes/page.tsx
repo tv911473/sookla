@@ -25,7 +25,7 @@ export default async function ProtectedPage() {
             <p className="text-xl font-medium">Retseptid puudu</p>
             <Link
               href="/protected/recipe-form"
-              className="text-blue-500 hover:text-blue-700 underline flex flex-col items-center"
+              className="text-red-500 hover:text-red-700 underline flex flex-col items-center"
             >
               Lisa retsept
             </Link>
