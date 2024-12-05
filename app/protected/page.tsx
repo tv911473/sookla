@@ -18,7 +18,7 @@ export default async function ProtectedPage() {
   const likedRecipes = await getLikedRecipesAction(user.id);
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-12">
+    <div className="flex-1 w-full flex flex-col gap-12 min-h-screen">
       <div className="flex flex-col gap-2 items-start">
         <RecipeFeed
           recipes={allRecipes}
