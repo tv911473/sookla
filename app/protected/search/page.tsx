@@ -14,11 +14,13 @@ export default async function SearchUserPage() {
   }
 
   return (
-    <div className="flex flex-col items-center p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-6">
-      <h2 className="text-2xl font-bold mb-4">Otsi Kasutajat</h2>
+    <div className=" min-h-screen">
+      <div className="flex flex-col items-center p-6 max-w-md w-full mx-auto rounded-xl shadow-md space-y-6 m-16 bg-red-100">
+        <h2 className="text-2xl font-bold mb-4">Otsi Kasutajat</h2>
 
-      {/* List laheb client side user-search-form.tsx-i */}
-      <SearchUserButton users={users} />
+        {/* List laheb client side user-search-form.tsx-i */}
+        <SearchUserButton users={users} />
+      </div>
     </div>
   );
 }

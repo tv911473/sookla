@@ -51,36 +51,30 @@ export default async function UserProfilePage({
   const followers = followersData as FollowerData[] | null;
 
   return (
-    <div className="flex flex-col items-center p-6 max-w-lg mx-auto bg-white rounded-xl shadow-md space-y-6">
-      {/* Profiilipilt */}
-      <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
-        <img
-          src="path/to/profile-picture"
-          className="w-full h-full object-cover rounded-full"
-        />
-      </div>
-
-      {/* Kasutajanimi */}
-      <div className="mb-4 text-center">
-        <p className="text-2xl font-bold">
-          {profileData.username || "Kasutajanimi pole määratud"}
-        </p>
-      </div>
-
-      {/* Follow Nupp */}
-      <FollowButton targetUserId={profileData.id} />
-      <FollowersList followers={followers} />
-
-      {/* Kasutaja andmed */}
-      <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner space-y-4">
-        <div>
-          <p className="text-sm text-gray-500">Kasutaja ID:</p>
-          <p className="text-lg font-medium">{profileData.id}</p>
+    <div className="min-h-screen">
+      <div className="flex flex-col items-center p-6 max-w-md mx-auto bg-red-100 rounded-xl shadow-md space-y-6 m-16">
+        {/* Profiilipilt */}
+        <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
+          <img
+            src="path/to/profile-picture"
+            className="w-full h-full object-cover rounded-full"
+          />
         </div>
-      </div>
 
-      {/* Tagasi nupp */}
-      <BackButton />
+        {/* Kasutajanimi */}
+        <div className="mb-4 text-center">
+          <p className="text-2xl font-bold">
+            {profileData.username || "Kasutajanimi pole määratud"}
+          </p>
+        </div>
+
+        {/* Follow Nupp */}
+        <FollowButton targetUserId={profileData.id} />
+        <FollowersList followers={followers} />
+
+        {/* Tagasi nupp */}
+        <BackButton />
+      </div>
     </div>
   );
 }

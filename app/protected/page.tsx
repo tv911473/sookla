@@ -24,7 +24,9 @@ export default async function ProtectedPage() {
           recipes={allRecipes}
           isLoggedIn={true}
           isLoggedInFilter={true}
-          likedRecipeId={likedRecipes} userId={user.id}/>
+          likedRecipeId={likedRecipes}
+          userId={user.id}
+        />
       </div>
     </div>
   );
