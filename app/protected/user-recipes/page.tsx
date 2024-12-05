@@ -18,14 +18,14 @@ export default async function ProtectedPage() {
   const userRecipes = await getUserRecipesAction(user.id);
 
   return (
-    <div className="flex-1 w-full flex flex-col gap-12 min-h-screen items-center m-10">
+    <div className="flex-1 w-full flex flex-col gap-12">
       <div className="flex flex-col gap-2 items-start">
         {userRecipes.length === 0 ? (
-          <div className="text-xl font-semibold">
-            <p>Retseptid puudu</p>
+          <div className="flex-1 w-full flex flex-col gap-2 min-h-screen items-center mt-10">
+            <p className="text-xl font-medium">Retseptid puudu</p>
             <Link
               href="/protected/recipe-form"
-              className="text-blue-500 hover:text-blue-700 underline flex flex-col items-center m-5"
+              className="text-blue-500 hover:text-blue-700 underline flex flex-col items-center"
             >
               Lisa retsept
             </Link>
