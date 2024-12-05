@@ -22,7 +22,6 @@ export default async function UserProfilePage({
 
   const currentUserId = userSession.user.id;
 
-  // kas logged in user proovib enda public lehele minna? kui jah saada konto lehele
   if (currentUserId === id) {
     redirect(`/protected/user-account`);
   }
@@ -53,26 +52,19 @@ export default async function UserProfilePage({
   return (
     <div className="min-h-screen">
       <div className="flex flex-col items-center p-6 max-w-md mx-auto bg-red-100 rounded-xl shadow-md space-y-6 m-16">
-        {/* Profiilipilt */}
         <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
           <img
             src="path/to/profile-picture"
             className="w-full h-full object-cover rounded-full"
           />
         </div>
-
-        {/* Kasutajanimi */}
         <div className="mb-4 text-center">
           <p className="text-2xl font-bold">
             {profileData.username || "Kasutajanimi pole määratud"}
           </p>
         </div>
-
-        {/* Follow Nupp */}
         <FollowButton targetUserId={profileData.id} />
         <FollowersList followers={followers} />
-
-        {/* Tagasi nupp */}
         <BackButton />
       </div>
     </div>

@@ -10,7 +10,7 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
-  // search username kaudu
+  // Search username kaudu
   const handleSearch = () => {
     if (!username.trim()) {
       setError("Palun sisestage kasutajanimi.");
@@ -26,11 +26,11 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
       return;
     }
 
-    setError(""); // reset error
+    setError("");
     router.push(`/protected/user-profile/${foundUser.id}`);
   };
 
-  // dropdownist kasutaja valimine
+  // Dropdownist kasutaja valimine
   const handleSelectUser = (user: any) => {
     setUsername(user.username);
     setDropdownOpen(false);
@@ -39,7 +39,6 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
 
   return (
     <div className="mb-4 relative">
-      {/* Kasutajate dropdown */}
       <div className="mb-4">
         <h3 className="text-xl font-semibold">Kasutajad:</h3>
         <button
@@ -49,8 +48,6 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
           {username || "Vali kasutaja"}{" "}
         </button>
       </div>
-
-      {/* Dropdown list */}
       {isDropdownOpen && (
         <ul className="absolute z-10 bg-white border border-gray-300 rounded-md w-full shadow-lg max-h-40 overflow-auto">
           {users.map((user) => (
@@ -64,8 +61,6 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
           ))}
         </ul>
       )}
-
-      {/* Username searchbox */}
       <input
         type="text"
         placeholder="Sisesta kasutajanimi"
@@ -73,11 +68,7 @@ const SearchUserButton = ({ users }: { users: any[] }) => {
         onChange={(e) => setUsername(e.target.value)}
         className="w-full p-2 border border-gray-300 rounded-md mt-4"
       />
-
-      {/* errorid jah */}
       {error && <p className="text-red-500">{error}</p>}
-
-      {/* otsi nupp */}
       <div className="mt-4">
         <Button onClick={handleSearch}>Otsi Kasutajat</Button>
       </div>

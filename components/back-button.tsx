@@ -1,5 +1,3 @@
-// SEDA SAAB LISADA IGALE POOLE, TEGINGI SELLE MOTTEGA ERALDI FAILI MEILE
-
 "use client";
 
 import { useRouter } from "next/navigation";

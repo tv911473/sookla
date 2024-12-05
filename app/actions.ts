@@ -17,7 +17,6 @@ export const signUpAction = async (formData: FormData) => {
     return { error: "Email, parool, ja kasutajanimi on vajalikud" };
   }
 
-  // Signup koos usernamega
   const { data, error: authError } = await supabase.auth.signUp({
     email,
     password,
@@ -145,7 +144,6 @@ export const getAllRecipesAction = async (): Promise<Recipe[]> => {
 
     .select(`*, categories(*), ingredients!inner(*), users(username)`)
     .order("time_of_creation", { ascending: false });
-  //console.log("server read all");
 
   if (error) {
     console.log("Error serveri retseptide kätte saamisel");
@@ -162,8 +160,6 @@ export const getSingleRecipe = async (id: number) => {
     .select(`*, categories(*), ingredients!inner(*), users(username)`)
     .eq("id", id)
     .single();
-
-  //console.log(recipe);
 
   if (error) {
     console.log("Error ühe serveri retsepti kättesaamisel");
