@@ -2,9 +2,9 @@ import { getSingleRecipe } from "@/app/actions";
 import { BigRecipeCard } from "@/components/recipes/BigRecipeCard";
 
 type SingleRecipeProps = {
-  params: {
+  params: Promise<{
     id: number;
-  };
+  }>;
 };
 
 export default async function SingleRecipe({ params }: SingleRecipeProps) {
