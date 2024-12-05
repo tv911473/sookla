@@ -40,7 +40,7 @@ export default async function UserAccountPage() {
 
   const followers = followersData as FollowerData[] | null;
   return (
-    <div className=" min-h-screen">
+    <div className="min-h-screen">
       <div className="flex flex-col items-center p-6 max-w-md w-full mx-auto bg-red-100 rounded-xl shadow-md space-y-6 m-16">
         {/* profiilipilt kui tahame lisada siis on koht olemas */}
         <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
