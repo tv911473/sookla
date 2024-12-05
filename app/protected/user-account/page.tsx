@@ -3,6 +3,9 @@ import ChangePasswordButton from "@/components/change-password-button";
 import ChangeUsernameButton from "@/components/change-username-button";
 import FollowersList from "@/components/followers-list";
 
+const default_avatar =
+  "https://emetryzjnikmcwiqgjtv.supabase.co/storage/v1/object/public/recipe-images/recipe-images/avatar.png";
+
 export default async function UserAccountPage() {
   const supabase = await createClient();
 
@@ -43,7 +46,7 @@ export default async function UserAccountPage() {
       <div className="flex flex-col items-center p-6 max-w-md w-full mx-auto bg-white rounded-xl shadow-md space-y-6 m-16">
         <div className="w-24 h-24 bg-gray-200 rounded-full mb-4">
           <img
-            src="path/to/profile-picture"
+            src={default_avatar}
             alt="Konto Profiilipilt"
             className="w-full h-full object-cover rounded-full"
           />
