@@ -74,8 +74,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({
           setLiked(!newLiked);
           return;
         }
-
-        console.log("Successfully inserted like:", data);
       } else {
         const { data, error } = await supabase
           .from("liked_recipes")
@@ -88,8 +86,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({
           setLiked(!newLiked);
           return;
         }
-
-        console.log("Successfully deleted like:", data);
       }
     } catch (error) {
       console.error("Unexpected error during like update:", error);
