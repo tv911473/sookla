@@ -5,52 +5,73 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
 const SearchUserButton = ({ users }: { users: any[] }) => {
-  const [uid, setUid] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
-  // UID search kui tahad ise otsida
+  // search username kaudu
   const handleSearch = () => {
-    if (!uid) {
-      setError("Palun sisestage UID.");
+    if (!username.trim()) {
+      setError("Palun sisestage kasutajanimi.");
+      return;
+    }
+
+    const foundUser = users.find(
+      (user) => user.username?.toLowerCase() === username.toLowerCase()
+    );
+
+    if (!foundUser) {
+      setError("Kasutajat ei leitud.");
       return;
     }
 
     setError(""); // reset error
-    router.push(`/protected/user-profile/${uid}`); // route user-profile
+    router.push(`/protected/user-profile/${foundUser.id}`);
   };
 
-  // search kui klikid listis kellegi peal
-  const handleClickUser = (id: string) => {
-    setUid(id); // UID laheb searchboxi ja kohe searchib
-    router.push(`/protected/user-profile/${id}`); // Navigate directly to the user profile page
+  // dropdownist kasutaja valimine
+  const handleSelectUser = (user: any) => {
+    setUsername(user.username);
+    setDropdownOpen(false);
+    router.push(`/protected/user-profile/${user.id}`);
   };
 
   return (
-    <div className="mb-4">
-      {/* Kasutajate list */}
+    <div className="mb-4 relative">
+      {/* Kasutajate dropdown */}
       <div className="mb-4">
         <h3 className="text-xl font-semibold">Kasutajad:</h3>
-        <ul>
-          {users.map((userItem) => (
+        <button
+          onClick={() => setDropdownOpen(!isDropdownOpen)}
+          className="w-full p-2 text-left border border-gray-300 rounded-md bg-white hover:bg-gray-100"
+        >
+          {username || "Vali kasutaja"}{" "}
+        </button>
+      </div>
+
+      {/* Dropdown list */}
+      {isDropdownOpen && (
+        <ul className="absolute z-10 bg-white border border-gray-300 rounded-md w-full shadow-lg max-h-40 overflow-auto">
+          {users.map((user) => (
             <li
-              key={userItem.id}
-              className="text-lg text-blue-500 cursor-pointer hover:underline"
-              onClick={() => handleClickUser(userItem.id)} // klikkad siis otsib
+              key={user.id}
+              onClick={() => handleSelectUser(user)}
+              className="p-2 hover:bg-gray-100 cursor-pointer"
             >
-              {userItem.username || "Kasutajanimi pole määratud"}
+              {user.username || "Kasutajanimi pole määratud"}
             </li>
           ))}
         </ul>
-      </div>
+      )}
 
-      {/* UID searchbox */}
+      {/* Username searchbox */}
       <input
         type="text"
-        placeholder="Sisesta UID"
-        value={uid}
-        onChange={(e) => setUid(e.target.value)}
-        className="w-full p-2 border border-gray-300 rounded-md"
+        placeholder="Sisesta kasutajanimi"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        className="w-full p-2 border border-gray-300 rounded-md mt-4"
       />
 
       {/* errorid jah */}
