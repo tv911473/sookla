@@ -12,7 +12,7 @@ export default async function UserProfilePage({
 }: {
   params: { id: string };
 }) {
-  const { id } = await params;
+  const { id } = params;
 
   const supabase = await createClient();
 
@@ -36,7 +36,7 @@ export default async function UserProfilePage({
     .single();
 
   if (profileError || !profileData) {
-    notFound();
+    return notFound();
   }
 
   // Fetch followers
