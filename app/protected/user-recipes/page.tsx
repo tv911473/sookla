@@ -19,9 +19,9 @@ export default async function ProtectedPage() {
 
   return (
     <div className="flex-1 w-full flex flex-col gap-12">
-      <div className="flex flex-col gap-2 items-start">
+      <div className="flex flex-col gap-2 items-start min-h-screen">
         {userRecipes.length === 0 ? (
-          <div className="flex-1 w-full flex flex-col gap-2 min-h-screen items-center mt-10">
+          <div className="flex-1 w-full flex flex-col gap-2 items-center mt-10">
             <p className="text-xl font-medium">Retseptid puudu</p>
             <Link
               href="/protected/recipe-form"
