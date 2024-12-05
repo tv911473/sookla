@@ -30,7 +30,7 @@ const FollowersList = ({ followers }: FollowersListProps) => {
   };
 
   return (
-    <div className="w-full bg-gray-100 p-4 rounded-lg shadow-inner mt-6">
+    <div className="w-full bg-white p-4 rounded-lg shadow-inner mt-6">
       <h3 className="text-lg font-bold mb-4">Jälgijad</h3>
       <div className="flex items-center space-x-2">
         {/* toggle kas naha followere */}
