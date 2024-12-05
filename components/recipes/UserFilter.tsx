@@ -21,7 +21,6 @@ export default function UserFilter({ onFilterChange }: UserFilterProps) {
       updatedFilters = updatedFilters.filter((item) => item !== filter);
     }
 
-    console.log("Selected Filters:", updatedFilters);
     setSelectedFilters(updatedFilters);
     onFilterChange(updatedFilters);
   };

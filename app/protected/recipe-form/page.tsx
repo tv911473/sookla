@@ -219,8 +219,6 @@ export default function RecipeForm() {
       return;
     }
 
-    console.log("Recipe added successfully:", recipeData);
-
     setTitle("");
     setIngredients([{ name: "", quantity: "" }]);
     setServings(0);
