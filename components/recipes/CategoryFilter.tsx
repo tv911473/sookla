@@ -40,28 +40,34 @@ export default function CategoryFilter({
       {isOpen && (
         <div className="absolute bg-white shadow-lg rounded-lg w-48 p-4 z-10 border">
           <form>
-            {categories.map((category, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <input
-                  type="checkbox"
-                  id={category.category_name}
-                  checked={selectedCategories.includes(category.category_name)}
-                  onChange={(event) =>
-                    handleCategoryChange(
-                      category.category_name,
-                      event.target.checked
-                    )
-                  }
-                  className="mr-2 accent-red-600"
-                />
-                <label
-                  htmlFor={category.category_name}
-                  className="text-black-700 cursor-pointer text-red-500 hover:text-red-700"
-                >
-                  {category.category_name}
-                </label>
-              </div>
-            ))}
+            {categories.length > 0 ? (
+              categories.map((category, index) => (
+                <div key={index} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    id={category.category_name}
+                    checked={selectedCategories.includes(
+                      category.category_name
+                    )}
+                    onChange={(event) =>
+                      handleCategoryChange(
+                        category.category_name,
+                        event.target.checked
+                      )
+                    }
+                    className="mr-2 accent-red-600"
+                  />
+                  <label
+                    htmlFor={category.category_name}
+                    className="text-black-700 cursor-pointer text-red-500 hover:text-red-700"
+                  >
+                    {category.category_name}
+                  </label>
+                </div>
+              ))
+            ) : (
+              <p>No categories available</p>
+            )}
           </form>
         </div>
       )}

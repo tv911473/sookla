@@ -21,7 +21,7 @@ export default async function ProtectedPage() {
     <div className="flex-1 w-full flex flex-col gap-12 min-h-screen">
       <div className="flex flex-col gap-2 items-start">
         <RecipeFeed
-          recipes={allRecipes}
+          initRecipes={allRecipes}
           isLoggedIn={true}
           isLoggedInFilter={true}
           likedRecipeId={likedRecipes}

@@ -8,7 +8,7 @@ import UserFilter from "@/components/recipes/UserFilter";
 import { deleteRecipe } from "../actions";
 
 interface RecipeFeedProps {
-  recipes: Recipe[];
+  initRecipes: Recipe[];
   likedRecipeId?: number[];
   isLoggedIn: boolean;
   isLoggedInFilter: boolean;
@@ -18,7 +18,7 @@ interface RecipeFeedProps {
 }
 
 export default function RecipeFeed({
-  recipes,
+  initRecipes = [],
   isLoggedIn,
   isLoggedInFilter,
   likedRecipeId = [],
@@ -30,24 +30,32 @@ export default function RecipeFeed({
   const [followings, setFollowings] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedUserFilters, setSelectedUserFilters] = useState<string[]>([]);
+  const [recipes, setRecipes] = useState<Recipe[]>(initRecipes);
 
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedCategories = await getCateories();
-      setCategories(fetchedCategories);
+      try {
+        const fetchedCategories = await getCateories();
+        setCategories(fetchedCategories || []);
 
-      const fetchedFollowings = await getFollowedUsersRecipes(userId);
-      setFollowings(fetchedFollowings);
+        const fetchedFollowings = await getFollowedUsersRecipes(userId);
+        setFollowings(fetchedFollowings || []);
+      } catch (error) {
+        setCategories([]);
+        setFollowings([]);
+      }
     };
 
     fetchData();
   }, [userId]);
 
   const filteredRecipes = useMemo(() => {
+    if (!recipes || !Array.isArray(recipes)) return [];
     return recipes.filter((recipe) => {
       const categoryMatch =
         selectedCategories.length === 0 ||
-        selectedCategories.includes(recipe.categories.category_name);
+        (recipe.categories?.category_name &&
+          selectedCategories.includes(recipe.categories.category_name));
 
       const userMatch =
         selectedUserFilters.length === 0 ||
@@ -79,7 +87,9 @@ export default function RecipeFeed({
       const result = await deleteRecipe(recipeId);
       if (result) {
         console.log("Recipe deleted successfully");
-        window.location.reload();
+        setRecipes((prevRecipes) =>
+          prevRecipes.filter((recipe) => recipe.id !== recipeId)
+        );
       } else {
         console.error("Failed to delete recipe");
       }
