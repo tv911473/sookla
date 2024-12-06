@@ -32,7 +32,7 @@ export default async function ProtectedPage() {
           </div>
         ) : (
           <RecipeFeed
-            recipes={userRecipes}
+            initRecipes={userRecipes}
             isLoggedIn={true}
             isUserRecipe={true}
             isUserPage={true}
