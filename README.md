@@ -37,3 +37,17 @@ Hinnad aina tõusevad ja tõusevad, kuid sööma peab ka vaene tudeng. Rakendus 
 * Ester Ojala
 * Taavi Vendt
 * Jörgen Kristofer Rebane
+
+## Low-fidelity wireframe
+### Login
+![Kuvatõmmis 2024-12-08 191249](https://github.com/user-attachments/assets/c5ab0927-24c5-496c-b16c-20466b5d8358)
+
+### Sign-up
+![Kuvatõmmis 2024-12-08 191238](https://github.com/user-attachments/assets/aa268493-7684-4b2d-aef7-b9c2391d41f5)
+
+### Main feed
+![Kuvatõmmis 2024-12-08 191308](https://github.com/user-attachments/assets/86a47009-5184-4c1e-a52d-285e1fedba31)
+
+### Add recipe
+![image](https://github.com/user-attachments/assets/3c5757e3-151b-4d16-b44b-c4d35b6df73f)
+
